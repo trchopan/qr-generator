@@ -1,28 +1,41 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <LinkInputForm @url="handleUrlEmit" />
+    <div v-html="qrCodeResult"></div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import LinkInputForm from "./components/LinkInputForm.vue";
+import QRCode from "qrcode-svg";
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    LinkInputForm
+  },
+  data() {
+    return {
+      qrCodeResult: ""
+    };
+  },
+  methods: {
+    handleUrlEmit(url) {
+      const svg = new QRCode({
+        content: url
+      }).svg();
+      this.qrCodeResult = svg;
+    }
   }
 };
 </script>
 
 <style lang="scss">
+@import "~normalize.css/normalize.css";
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

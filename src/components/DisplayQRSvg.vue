@@ -28,7 +28,7 @@
       </div>
       <div class="setting--container">
         <div class="setting--item">
-          <label for="qr-size">QR Size</label>
+          <label for="qr-size">QR Size {{ qrSize }}</label>
           <input
             type="range"
             min="160"
@@ -38,27 +38,27 @@
           />
         </div>
         <div class="setting--item">
-          <label for="qr-size">X</label>
+          <label for="qr-size">X {{ qrGroupX }}</label>
           <input type="range" min="0" max="256" v-model="qrGroupX" />
         </div>
         <div class="setting--item">
-          <label for="qr-size">Y</label>
+          <label for="qr-size">Y {{ qrGroupY }}</label>
           <input type="range" min="0" max="256" v-model="qrGroupY" />
         </div>
         <div class="setting--item">
-          <label for="img-width">Image width</label>
+          <label for="img-width">Image width {{ imgWidth }}</label>
           <input type="range" min="0" max="256" v-model="imgWidth" />
         </div>
         <div class="setting--item">
-          <label for="img-width">Image height</label>
+          <label for="img-width">Image height {{ imgHeight }}</label>
           <input type="range" min="0" max="256" v-model="imgHeight" />
         </div>
         <div class="setting--item">
-          <label for="img-width">Image X</label>
+          <label for="img-width">Image X {{ imgX }}</label>
           <input type="range" min="0" max="256" v-model="imgX" />
         </div>
         <div class="setting--item">
-          <label for="img-width">Image Y</label>
+          <label for="img-width">Image Y {{ imgY }}</label>
           <input type="range" min="0" max="256" v-model="imgY" />
         </div>
       </div>
@@ -79,13 +79,13 @@ export default Vue.extend({
   },
   data() {
     return {
-      qrSize: 200,
-      qrGroupX: 0,
-      qrGroupY: 0,
-      imgWidth: 150,
-      imgHeight: 150,
-      imgX: 100,
-      imgY: 150
+      qrSize: 174,
+      qrGroupX: 45,
+      qrGroupY: 27,
+      imgWidth: 256,
+      imgHeight: 256,
+      imgX: 6,
+      imgY: 17
     };
   },
   computed: {

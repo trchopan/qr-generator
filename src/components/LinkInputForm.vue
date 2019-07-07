@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import qrCode from "@/assets/qr-frame.jpg";
+
 export default {
   name: "LinkInputForm",
   data() {
@@ -19,20 +21,36 @@ export default {
       image: ""
     };
   },
+  created() {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      this.imageToBase64(xhr.response, result => {
+        this.image = result;
+      });
+    };
+    xhr.open("GET", qrCode);
+    xhr.responseType = "blob";
+    xhr.send();
+  },
   methods: {
+    imageToBase64(file, callback) {
+      const fileReader = new FileReader();
+      fileReader.onloadend = e => {
+        const { error, result } = e.target;
+        if (error) {
+          console.error(error);
+        } else {
+          callback(result);
+        }
+      };
+      fileReader.readAsDataURL(file);
+    },
     updateImage(event) {
       const files = event.target.files;
       if (files && files[0]) {
-        const fileReader = new FileReader();
-        fileReader.onloadend = e => {
-          const { error, result } = e.target;
-          if (error) {
-            console.error(error);
-          } else {
-            this.image = result;
-          }
-        };
-        fileReader.readAsDataURL(files[0]);
+        this.imageToBase64(files[0], result => {
+          this.image = result;
+        });
       }
     },
     onSubmit() {

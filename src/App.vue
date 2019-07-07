@@ -1,31 +1,24 @@
 <template>
   <div id="app">
-    <LinkInputForm @url="handleUrlEmit" />
-    <div v-html="qrCodeResult"></div>
+    <LinkInputForm @output="output = $event" />
+    <DisplayQRSvg :input="output" />
   </div>
 </template>
 
 <script>
 import LinkInputForm from "./components/LinkInputForm.vue";
-import QRCode from "qrcode-svg";
+import DisplayQRSvg from "./components/DisplayQRSvg.vue";
 
 export default {
   name: "app",
   components: {
-    LinkInputForm
+    LinkInputForm,
+    DisplayQRSvg
   },
   data() {
     return {
-      qrCodeResult: ""
+      output: {}
     };
-  },
-  methods: {
-    handleUrlEmit(url) {
-      const svg = new QRCode({
-        content: url
-      }).svg();
-      this.qrCodeResult = svg;
-    }
   }
 };
 </script>

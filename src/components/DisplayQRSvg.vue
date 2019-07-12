@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <button @click="save()" type="button">Save</button>
+    <button @click="save()" type="button" class="btn">Save</button>
     <a ref="downloadLink" v-show="false"></a>
   </div>
 </template>

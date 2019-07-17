@@ -2,7 +2,8 @@
   <div>
     <div class="display--container">
       <div class="output--wrapper">
-        <div ref="svgRef" class="output--svg">
+        <img :src="imgBase64" alt="" />
+        <div ref="svgRef" class="output--svg" :style="svgStyle">
           <svg
             version="1.1"
             id="Layer_1"
@@ -10,60 +11,40 @@
             xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px"
             y="0px"
-            viewBox="0 0 256 280"
-            style="enable-background:new 0 0 256 280;"
+            viewBox="0 0 256 256"
+            style="enable-background:new 0 0 256 256;"
             xml:space="preserve"
           >
+            <g v-html="svg"></g>
             <image
               ref="imageRef"
               style="overflow:hidden;"
-              :width="imgWidth"
-              :height="imgHeight"
-              :xlink:href="imgbase64"
+              x="50%"
+              y="50%"
+              :width="imgSize"
+              :height="imgSize"
+              :xlink:href="logoBase64"
               :transform="imgTranslate"
             ></image>
-            <g v-html="svg" :transform="gTranslate"></g>
           </svg>
         </div>
       </div>
-      <div class="setting--container">
-        <div class="setting--item">
-          <label for="qr-size">QR Size {{ qrSize }}</label>
-          <input
-            type="range"
-            min="160"
-            max="256"
-            v-model="qrSize"
-            id="qr-size"
-          />
+      <div>
+        <div>
+          <label for="qrSize">QR Size {{ qrSize }}</label>
+          <input type="range" v-model="qrSize" min="0" max="1000" />
         </div>
-        <div class="setting--item">
-          <label for="qr-size">X {{ qrGroupX }}</label>
-          <input type="range" min="0" max="256" v-model="qrGroupX" />
+        <div>
+          <label for="qrSize">QR X {{ qrX }}</label>
+          <input type="range" v-model="qrX" />
         </div>
-        <div class="setting--item">
-          <label for="qr-size">Y {{ qrGroupY }}</label>
-          <input type="range" min="0" max="256" v-model="qrGroupY" />
-        </div>
-        <div class="setting--item">
-          <label for="img-width">Image width {{ imgWidth }}</label>
-          <input type="range" min="0" max="256" v-model="imgWidth" />
-        </div>
-        <div class="setting--item">
-          <label for="img-width">Image height {{ imgHeight }}</label>
-          <input type="range" min="0" max="256" v-model="imgHeight" />
-        </div>
-        <div class="setting--item">
-          <label for="img-width">Image X {{ imgX }}</label>
-          <input type="range" min="0" max="256" v-model="imgX" />
-        </div>
-        <div class="setting--item">
-          <label for="img-width">Image Y {{ imgY }}</label>
-          <input type="range" min="0" max="256" v-model="imgY" />
+        <div>
+          <label for="qrSize">QR Y {{ qrY }}</label>
+          <input type="range" v-model="qrY" />
         </div>
       </div>
     </div>
-    <button @click="save()" type="button" class="btn">Save</button>
+    <button @click="save()" type="button" class="btn">Save QR as svg</button>
     <a ref="downloadLink" v-show="false"></a>
   </div>
 </template>
@@ -79,25 +60,21 @@ export default Vue.extend({
   },
   data() {
     return {
-      qrSize: 174,
-      qrGroupX: 45,
-      qrGroupY: 27,
-      imgWidth: 256,
-      imgHeight: 256,
-      imgX: 6,
-      imgY: 17
+      qrSize: 200, // pixels
+      qrX: 0,
+      qrY: 0
     };
   },
   computed: {
     qrCode() {
       if (!this.input || !this.input.url) {
+        console.error("no input given");
         return;
       }
       return new QRCode({
         content: this.input.url,
-        width: this.qrSize,
-        height: this.qrSize,
-        padding: 1
+        padding: 1,
+        color: this.input.color
       });
     },
     svg() {
@@ -107,14 +84,41 @@ export default Vue.extend({
       }
       return "";
     },
-    imgbase64() {
+    logoBase64() {
+      return this.input && this.input.logo ? this.input.logo : "";
+    },
+    imgBase64() {
       return this.input && this.input.image ? this.input.image : "";
     },
-    gTranslate() {
-      return `translate(${this.qrGroupX},${this.qrGroupY})`;
+    imgSize() {
+      const qrViewBox = 256;
+      if (this.input && this.input.url) {
+        const urlLength = this.input.url.length;
+        if (urlLength < 12) {
+          return Math.round(qrViewBox * 0.24);
+        }
+        if (urlLength < 24) {
+          return Math.round(qrViewBox * 0.2);
+        }
+        if (urlLength < 40) {
+          return Math.round(qrViewBox * 0.18);
+        }
+        if (urlLength < 60) {
+          return Math.round(qrViewBox * 0.24);
+        }
+        return Math.round(qrViewBox * 0.3);
+      }
+      return 0;
     },
     imgTranslate() {
-      return `translate(${this.imgX},${this.imgY})`;
+      return `translate(-${this.imgSize / 2},-${this.imgSize / 2})`;
+    },
+    svgStyle() {
+      return {
+        top: this.qrX + "%",
+        left: this.qrY + "%",
+        width: this.qrSize + "px"
+      };
     }
   },
   methods: {
@@ -135,17 +139,18 @@ export default Vue.extend({
 
 <style lang="scss">
 .display--container {
-  display: flex;
-  width: 500px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-gap: 1rem;
+  padding: 1rem;
+  position: relative;
 }
 .output--wrapper {
   display: block;
-  width: 256px;
-  height: 280px;
-  border: solid 1px black;
+  position: relative;
 }
 .output--svg {
+  position: absolute;
   svg {
     display: block;
   }

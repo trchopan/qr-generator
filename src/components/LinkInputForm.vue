@@ -1,49 +1,51 @@
 <template>
   <form @submit.prevent="onSubmit()" class="form--wrapper">
-    <label for="link">URL</label>
+    <label for="link">URL length:{{ url.length }}</label>
     <input type="text" id="link" v-model="url" />
+    <label for="color">Color</label>
+    <input type="color" id="color" v-model="color" />
+    <label for="logo">Logo</label>
+    <input type="file" id="logo" @change="updateLogo($event)" />
     <label for="image">Image</label>
     <input type="file" id="image" @change="updateImage($event)" />
     <div class="generate--button">
-      <button type="submit">Generate</button>
+      <button type="submit" class="btn">Generate</button>
     </div>
   </form>
 </template>
 
 <script>
-import qrCode from "@/assets/qr-frame.jpg";
+// import qrLogo from "@/assets/qr-logo.png";
 
 export default {
   name: "LinkInputForm",
   data() {
     return {
       url: "",
-      image: ""
+      logo: "",
+      image: "",
+      color: "#0066ff"
     };
   },
   created() {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = () => {
-      this.imageToBase64(xhr.response, result => {
-        this.image = result;
-      });
-    };
-    xhr.open("GET", qrCode);
-    xhr.responseType = "blob";
-    xhr.send();
+    //    const xhr = new XMLHttpRequest();
+    //    xhr.onload = () => {
+    //      this.imageToBase64(xhr.response, result => {
+    //        this.logo = result;
+    //      });
+    //    };
+    //    xhr.open("GET", qrLogo);
+    //    xhr.responseType = "blob";
+    //    xhr.send();
   },
   methods: {
-    imageToBase64(file, callback) {
-      const fileReader = new FileReader();
-      fileReader.onloadend = e => {
-        const { error, result } = e.target;
-        if (error) {
-          console.error(error);
-        } else {
-          callback(result);
-        }
-      };
-      fileReader.readAsDataURL(file);
+    updateLogo(event) {
+      const files = event.target.files;
+      if (files && files[0]) {
+        this.imageToBase64(files[0], result => {
+          this.logo = result;
+        });
+      }
     },
     updateImage(event) {
       const files = event.target.files;
@@ -56,7 +58,9 @@ export default {
     onSubmit() {
       this.$emit("output", {
         url: this.url,
-        image: this.image
+        logo: this.logo,
+        image: this.image,
+        color: this.color
       });
     }
   }

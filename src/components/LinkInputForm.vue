@@ -37,6 +37,7 @@ export default {
     //    xhr.open("GET", qrLogo);
     //    xhr.responseType = "blob";
     //    xhr.send();
+    console.log('Hello');
   },
   methods: {
     updateLogo(event) {

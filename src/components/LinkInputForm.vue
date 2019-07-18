@@ -19,9 +19,6 @@
             </button>
             <DisplayQRSvg :input="output" />
           </div>
-          <div class="generate--button">
-            <button type="submit" class="btn">Generate</button>
-          </div>
         </div>
         <div class="col-md-4">
           <div class="clearfix"></div>
@@ -73,6 +70,9 @@
               </div>
             </div>
             <!-- End accordion -->
+            <div class="generate--button">
+              <button type="submit" class="btn">Generate</button>
+            </div>
           </div>
         </div>
       </div>
@@ -108,7 +108,6 @@ export default {
     //    xhr.open("GET", qrLogo);
     //    xhr.responseType = "blob";
     //    xhr.send();
-    console.log("Hello");
   },
   methods: {
     updateLogo(event) {

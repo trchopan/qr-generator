@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-    "remove-hash": "cp dist/js/app.*.js dist/js/app.js && cp dist/js/chunk-vendors.*.js dist/js/chunk-vendors.js",
+    "remove-hash": "sh remove-hash.sh",
     "deploy": "npm run build && npm run remove-hash && firebase deploy --only hosting"
   },
   "dependencies": {

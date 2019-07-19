@@ -6,12 +6,17 @@
     <!-- <label for="logo">Logo</label>
     <input type="file" id="logo" @change="updateLogo($event)" /> -->
 
-
     <div class="container">
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <input type="text" class="form-control" id="link" v-model="url" placeholder="Enter your website" />
+            <input
+              type="text"
+              class="form-control"
+              id="link"
+              v-model="url"
+              placeholder="Enter your website"
+            />
           </div>
           <div class="form-group">
             <button>
@@ -25,7 +30,12 @@
           <!-- Start accordion -->
           <div class="panel-group" id="accordion">
             <div class="panel panel-default">
-              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#frame">
+              <div
+                class="panel-heading"
+                data-toggle="collapse"
+                data-parent="#accordion"
+                href="#frame"
+              >
                 <h4 class="panel-title">
                   Frame
                 </h4>
@@ -34,13 +44,22 @@
                 <div class="panel-body">
                   <div class="form-group">
                     <label for="image">Customize</label>
-                    <input type="file" id="image" @change="updateImage($event)" />
+                    <input
+                      type="file"
+                      id="image"
+                      @change="updateImage($event)"
+                    />
                   </div>
                 </div>
               </div>
             </div>
             <div class="panel panel-default">
-              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#color">
+              <div
+                class="panel-heading"
+                data-toggle="collapse"
+                data-parent="#accordion"
+                href="#color"
+              >
                 <h4 class="panel-title">
                   Color
                 </h4>
@@ -49,13 +68,23 @@
                 <div class="panel-body">
                   <div class="form-group">
                     <label for="color">Color</label>
-                    <input type="color" id="color" v-model="color" class="form-control" />
+                    <input
+                      type="color"
+                      id="color"
+                      v-model="color"
+                      class="form-control"
+                    />
                   </div>
                 </div>
               </div>
             </div>
             <div class="panel panel-default">
-              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#logoPanel">
+              <div
+                class="panel-heading"
+                data-toggle="collapse"
+                data-parent="#accordion"
+                href="#logoPanel"
+              >
                 <h4 class="panel-title">
                   Logo
                 </h4>

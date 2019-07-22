@@ -39,7 +39,6 @@ export default Vue.extend({
   computed: {
     qrCode() {
       if (!this.url) {
-        console.error("no input given");
         return;
       }
       return new QRCode({

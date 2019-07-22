@@ -1,11 +1,5 @@
 <template>
   <form @submit.prevent="onSubmit()" class="form--wrapper">
-    <!-- <label for="link">URL length:{{ url.length }}</label>
-    <input type="text" id="link" v-model="url" /> -->
-
-    <!-- <label for="logo">Logo</label>
-    <input type="file" id="logo" @change="updateLogo($event)" /> -->
-
     <div class="container">
       <div class="row">
         <div class="col-md-8">

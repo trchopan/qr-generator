@@ -19,7 +19,7 @@
       y="50%"
       :width="logoSize"
       :height="logoSize"
-      :xlink:href="logoBase64"
+      :xlink:href="logo"
       :transform="logoTranslate"
     ></image>
   </svg>
@@ -34,7 +34,7 @@ export default Vue.extend({
   props: {
     url: String,
     color: String,
-    logoBase64: String
+    logo: String
   },
   computed: {
     qrCode() {

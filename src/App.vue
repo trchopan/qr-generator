@@ -38,11 +38,12 @@
               Save QR as SVG
             </button>
             <button
-              class="btn btn-default mx-1"
+              v-if="frame"
+              class="btn btn-default ma-5"
               type="button"
-              @click.prevent="$refs.displaySvg.savePng()"
+              @click.prevent="$refs.displaySvg.saveCanvas()"
             >
-              Save QR as PNG
+              Save with Frame as PNG
             </button>
           </div>
         </div>
@@ -65,7 +66,7 @@ export default {
   },
   data() {
     return {
-      url: "",
+      url: "test test",
       color: "",
       logo: "",
       frame: "",

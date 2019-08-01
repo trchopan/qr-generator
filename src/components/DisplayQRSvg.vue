@@ -1,28 +1,29 @@
 <template>
-  <div class="frame--container">
-    <div class="img--container">
-      <img ref="imgRef" :src="frame" alt="" />
-    </div>
+  <div>
     <QRSvg
-      v-if="!frame"
       ref="qrSvg"
       :url="url"
       :color="color"
       :logo="logo"
       style="width: 256px; height: 256px;"
+      v-show="!showResize"
     />
-    <VueDragResize
-      v-if="showResize"
-      parentLimitation
-      aspectRatio
-      :w="256"
-      :h="256"
-      @resizing="resize"
-      @dragging="resize"
-    >
-      <QRSvg ref="qrSvg" :url="url" :color="color" :logo="logo" />
-    </VueDragResize>
-    <canvas ref="qrCanvas" width="256" height="256" v-show="false"></canvas>
+    <div ref="frameContainer" class="frame--container">
+      <img ref="frameRef" :src="frame" alt="" />
+      <VueDragResize
+        v-if="showResize"
+        parentLimitation
+        aspectRatio
+        :w="256"
+        :h="256"
+        @resizing="resize"
+        @dragging="resize"
+      >
+        <!-- <QRSvg :url="url" :color="color" :logo="logo" /> -->
+        <img ref="qrRef" :src="svgBlob" alt="" v-show="true" />
+      </VueDragResize>
+    </div>
+    <canvas ref="canvasRef" v-show="false" />
     <a ref="downloadLink" v-show="false"></a>
   </div>
 </template>
@@ -44,8 +45,20 @@ export default Vue.extend({
   },
   data() {
     return {
-      showResize: false
+      showResize: false,
+      width: 256,
+      height: 256,
+      top: 0,
+      left: 0
     };
+  },
+  computed: {
+    svgBlob() {
+      if (!this.$refs.qrSvg) {
+        return "";
+      }
+      return this.$refs.qrSvg.svgBlob;
+    }
   },
   methods: {
     doSave(item, name) {
@@ -54,26 +67,32 @@ export default Vue.extend({
       this.$refs.downloadLink.click();
     },
     saveSvg() {
-      this.doSave(this.$refs.qrSvg.svgBlob, "qr-code.svg");
-    },
-    savePng() {
-      const img = new Image();
-      const canvas = this.$refs.qrCanvas;
-      const ctx = canvas.getContext("2d");
-      const DOMURL = self.URL || self.webkitURL || self;
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0);
-        const png = canvas.toDataURL("image/png");
-        DOMURL.revokeObjectURL(png);
-        this.doSave(png, "qr-code.png");
-      };
-      img.src = this.$refs.qrSvg.svgBlob;
+      this.doSave(this.svgBlob, "qr-code.svg");
     },
     resize(newRect) {
       this.width = newRect.width;
       this.height = newRect.height;
       this.top = newRect.top;
       this.left = newRect.left;
+    },
+    saveCanvas() {
+      const canvas = this.$refs.canvasRef;
+      const frame = this.$refs.frameRef;
+      const frameW = this.$refs.frameContainer.offsetWidth;
+      const frameH = this.$refs.frameContainer.offsetHeight;
+      canvas.width = frameW;
+      canvas.height = frameH;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(frame, 0, 0, frameW, frameH);
+      ctx.drawImage(
+        this.$refs.qrRef,
+        this.left,
+        this.top,
+        this.width,
+        this.height
+      );
+      const png = canvas.toDataURL("image/png");
+      this.doSave(png, "qr-code.png");
     }
   },
   watch: {

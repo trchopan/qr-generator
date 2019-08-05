@@ -1,49 +1,50 @@
 <template>
   <div id="app">
     <div class="container">
-      <URLForm @url="url = $event" class="no-print" />
-      <div v-if="step == 0" class="row" key="qr-step">
+      <URLForm
+        :color="color"
+        @url="url = $event"
+        @svg="svg = $event"
+        class="no-print"
+      />
+      <div class="row" key="qr-step">
         <div v-if="url" class="col-md-8">
           <div class="ma-5">
             <DisplayQRSvg
               ref="displaySvg"
               :url="url"
+              :svg="svg"
               :color="color"
               :logo="logo"
               :frame="frame"
-              :qrSize="qrSize"
-              :qrTop="qrTop"
-              :qrLeft="qrLeft"
             />
           </div>
         </div>
         <div v-else class="col-md-8">
-          <p class="text-center ma-5">Enter URL</p>
+          <p class="text-center ma-5">{{ l("App.enterUrl") }}</p>
         </div>
         <div class="col-md-4">
           <QRCodeSettings
             @color="color = $event"
             @logo="logo = $event"
             @frame="frame = $event"
-            @qrSize="qrSize = $event"
-            @qrTop="qrTop = $event"
-            @qrLeft="qrLeft = $event"
           />
-          <div v-if="url" class="text-center">
+          <div class="text-center">
             <button
+              v-if="url && !frame"
               class="btn btn-default mx-1"
               type="button"
               @click.prevent="$refs.displaySvg.saveSvg()"
             >
-              Save QR as SVG
+              {{ l("App.saveQR") }}
             </button>
             <button
-              v-if="frame"
+              v-if="url && frame"
               class="btn btn-default ma-5"
               type="button"
               @click.prevent="$refs.displaySvg.saveCanvas()"
             >
-              Save with Frame as PNG
+              {{ l("App.saveWithFrame") }}
             </button>
           </div>
         </div>
@@ -66,15 +67,11 @@ export default {
   },
   data() {
     return {
-      url: "test test",
+      svg: "",
+      url: "",
       color: "",
       logo: "",
-      frame: "",
-      step: 0,
-      svg: "",
-      qrSize: 50,
-      qrTop: 0,
-      qrLeft: 0
+      frame: ""
     };
   }
 };

@@ -4,14 +4,14 @@
       class="panel-heading"
       data-toggle="collapse"
       data-parent="#accordion"
-      :href="'#' + props.title"
+      :href="'#' + props.id"
     >
       <h4 class="panel-title">
         {{ props.title }}
       </h4>
     </div>
     <div
-      :id="props.title"
+      :id="props.id"
       class="panel-collapse collapse"
       :class="{ in: props.open !== undefined }"
     >

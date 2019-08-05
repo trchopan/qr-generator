@@ -1,3 +1,21 @@
 {
-  "color": "Color"
+  "QRCodeSettings": {
+    "color": "Color",
+    "customize": "Customize",
+    "logo": "Logo",
+    "frame": "Frame",
+    "upload": "Upload",
+    "reset": "Reset",
+    "plaseScan": "Please scan the QR to check first",
+    "beware": "Beware the contrast of QR color and the logo",
+    "theColor": "The color of the logo should be different from the QR code. Otherwise it will be difficult to be scanned."
+  },
+  "App": {
+    "enterUrl": "Enter URL",
+    "saveQR": "Save QR as SVG",
+    "saveWithFrame": "Save QR with Frame as PNG"
+  },
+  "URLForm": {
+    "enterUrl": "Enter URL"
+  }
 }

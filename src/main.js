@@ -8,7 +8,12 @@ Vue.component("VueDragResize", VueDragResize);
 Vue.mixin({
   methods: {
     l: function(key) {
-      return window.label[key];
+      const paths = key.split(".");
+      let result = window.label;
+      for (let i of paths) {
+        result = result && result[i];
+      }
+      return result;
     }
   }
 });

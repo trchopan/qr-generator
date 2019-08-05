@@ -1,3 +1,22 @@
 {
-  "color": "Màu sắc"
+  "QRCodeSettings": {
+    "color": "Màu sắc",
+    "customize": "Tuỳ chỉnh",
+    "logo": "Logo",
+    "frame": "Hình nền",
+    "upload": "Tải lên",
+    "reset": "Đặt lại",
+    "plaseScan": "Vui lòng quét QR để kiểm tra",
+    "beware": "Xem kỹ sự tương phản của màu QR và logo",
+    "theColor": "Màu sắc của logo phải khác với mã QR nếu không sẽ rất khó để quét"
+  },
+  "App": {
+    "enterUrl": "Nhập đường dẫn",
+    "saveQR": "Lưu QR dạng SVG",
+    "saveWithFrame": "Lưu QR với Khung dạng PNG"
+  },
+  "URLForm": {
+    "enterUrl": "Nhập đường dẫn"
+  }
+
 }

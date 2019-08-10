@@ -136,8 +136,8 @@ export default Vue.extend({
     changeInput(event, labelRef, emitter) {
       if (event && event.target.files && event.target.files[0]) {
         let name = event.target.files[0].name;
-        if (name.length > 18) {
-          const start = name.substring(0, 20);
+        if (name.length > 20) {
+          const start = name.substring(0, 16);
           const last = name.slice(name.length - 4, name.length);
           name = start + "..." + last;
         }

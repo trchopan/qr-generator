@@ -67,7 +67,7 @@
 import Vue from "vue";
 import PanelSetting from "./PanelSetting";
 import { Chrome } from "vue-color";
-// import BackgroundImage from "@/assets/background.jpg";
+import BackgroundImage from "@/assets/background.jpg";
 
 export default Vue.extend({
   name: "QRCodeSettings",
@@ -96,22 +96,26 @@ export default Vue.extend({
    * Mounted then load the frame
    * This is for quick development not in production
    */
-  // mounted() {
-  //   const xhr = new XMLHttpRequest();
-  //   xhr.onload = () => {
-  //     const event = {};
-  //     event.target = {};
-  //     event.target.files = [xhr.response];
-  //     this.imageToBase64(event, result => {
-  //       this.$emit("frame", result);
-  //     });
-  //   };
-  //   xhr.open("GET", BackgroundImage);
-  //   xhr.responseType = "blob";
-  //   setTimeout(() => {
-  //     xhr.send();
-  //   }, 1000);
-  // },
+  mounted() {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      const event = {};
+      event.target = {};
+      event.target.files = [xhr.response];
+      this.imageToBase64(event, result => {
+        this.$emit("frame", result);
+      });
+    };
+    xhr.open("GET", BackgroundImage);
+    xhr.responseType = "blob";
+    setTimeout(() => {
+      xhr.send();
+    }, 1000);
+  },
   methods: {
     imageToBase64(event, callback) {
       const files = event.target.files;
@@ -131,12 +135,18 @@ export default Vue.extend({
     },
     changeInput(event, labelRef, emitter) {
       if (event && event.target.files && event.target.files[0]) {
-        labelRef.innerText = event.target.files[0].name;
+        let name = event.target.files[0].name;
+        if (name.length > 18) {
+          const start = name.substring(0, 20);
+          const last = name.slice(name.length - 4, name.length);
+          name = start + "..." + last;
+        }
+        labelRef.innerText = name;
         this.imageToBase64(event, result => {
           this.$emit(emitter, result);
         });
       } else {
-        labelRef.innerText = this.l("upload");
+        labelRef.innerText = this.l("QRCodeSettings.upload");
         this.$emit(emitter, "");
       }
     },

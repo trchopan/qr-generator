@@ -1,12 +1,25 @@
 <template>
   <div id="app">
     <div class="container">
-      <URLForm
-        :color="color"
-        @url="url = $event"
-        @svg="svg = $event"
-        class="no-print"
-      />
+      <div class="row">
+        <URLForm
+          :color="color"
+          @url="url = $event"
+          @svg="svg = $event"
+          class="no-print col-xs-10"
+        />
+        <div class="col-xs-2">
+          <button
+            class="btn btn-default"
+            type="button"
+            data-toggle="modal"
+            data-target="#exampleModal"
+          >
+            <i class="fa fa-code"></i>
+          </button>
+          <EmbededModal :url="url" />
+        </div>
+      </div>
       <div class="row" key="qr-step">
         <div v-if="url" class="col-md-8">
           <div class="ma-5">
@@ -57,13 +70,15 @@
 import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";
 import DisplayQRSvg from "./components/DisplayQRSvg.vue";
+import EmbededModal from "./components/EmbededModal.vue";
 
 export default {
   name: "app",
   components: {
     URLForm,
     QRCodeSettings,
-    DisplayQRSvg
+    DisplayQRSvg,
+    EmbededModal
   },
   data() {
     return {

@@ -17,5 +17,10 @@
   },
   "URLForm": {
     "enterUrl": "Enter URL"
+  },
+  "EmbededModal": {
+    "embedQr": "Embed QR code on your website",
+    "copy": "Copy to Clipboard",
+    "copied": "The embedded code is copied"
   }
 }

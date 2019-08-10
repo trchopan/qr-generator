@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onSubmit(url)" class="form-inline">
+  <form @submit.prevent="onSubmit(url)">
     <div class="form-group">
       <input
         type="text"
@@ -9,9 +9,6 @@
         :placeholder="l('URLForm.enterUrl')"
       />
     </div>
-    <button class="btn btn-default">
-      <i class="fa fa-code"></i>
-    </button>
   </form>
 </template>
 
@@ -24,11 +21,14 @@ export default Vue.extend({
   props: {
     color: String
   },
-  // mounted() {
-  //   setTimeout(() => {
-  //     this.onSubmit("wogasdfasdf");
-  //   }, 500);
-  // },
+  mounted() {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+    setTimeout(() => {
+      this.onSubmit("wogasdfasdf");
+    }, 500);
+  },
   data() {
     return {
       url: ""
@@ -59,16 +59,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.form-inline {
-  .form-group {
-    display: inline-block;
-    width: calc(100% - 4rem);
-    padding-right: 0.5rem;
-    input {
-      width: 100%;
-    }
-  }
-}
-</style>

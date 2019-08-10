@@ -17,6 +17,10 @@
   },
   "URLForm": {
     "enterUrl": "Nhập đường dẫn"
+  },
+  "EmbededModal": {
+    "embedQr": "Nhúng mã QR trên trang web của bạn",
+    "copy": "Sao chép vào clipboard",
+    "copied": "Mã nhúng đã được sao chép"
   }
-
 }

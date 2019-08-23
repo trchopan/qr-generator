@@ -72,6 +72,7 @@ export default Vue.extend({
       this.height = newRect.height;
       this.top = newRect.top;
       this.left = newRect.left;
+      this.$emit("newSize", String(this.width));
     },
     saveCanvas() {
       const canvas = this.$refs.canvasRef;
@@ -105,6 +106,6 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .frame--container {
   position: relative;
-  min-height: 256px;
+  min-height: 540px;
 }
 </style>

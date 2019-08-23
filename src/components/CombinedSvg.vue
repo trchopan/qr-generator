@@ -48,17 +48,23 @@ export default Vue.extend({
     logoSize() {
       const qrViewBox = 256;
       const thresholds = [
-        { limit: 12, multiplier: 0.24 },
-        { limit: 24, multiplier: 0.2 },
-        { limit: 40, multiplier: 0.18 },
-        { limit: 60, multiplier: 0.24 }
+        { lim: 17, mul: 0.218 },
+        { lim: 32, mul: 0.26 },
+        { lim: 53, mul: 0.291 },
+        { lim: 78, mul: 0.201 },
+        { lim: 106, mul: 0.18 },
+        { lim: 134, mul: 0.209 },
+        { lim: 155, mul: 0.234 },
+        { lim: 192, mul: 0.256 },
+        { lim: 230, mul: 0.239 },
+        { lim: 271, mul: 0.239 }
       ];
       if (this.urlLength) {
         const found = thresholds.find(
-          threshold => this.urlLength < threshold.limit
+          threshold => this.urlLength <= threshold.lim
         );
-        const multiplier = found ? found.multiplier : 0.3;
-        return multiplier * qrViewBox;
+        const mul = found ? found.mul : 0.27;
+        return mul * qrViewBox;
       }
       return 0;
     },

@@ -24,18 +24,27 @@
       </div>
     </PanelSetting>
     <PanelSetting id="logo" :title="l('QRCodeSettings.logo')">
-      <div class="form-group input--fileupload">
+      <div class="form-group input--fileupload" v-if="!logo">
         <label ref="logoLabel">{{ l("QRCodeSettings.upload") }}</label>
         <input
           type="file"
           id="logo"
-          @change="changeLogo"
+          @input="changeLogo"
           accept="image/png, image/jpeg"
         />
       </div>
-      <button type="button" @click="changeLogo()" class="btn btn-default">
-        {{ l("QRCodeSettings.reset") }}
-      </button>
+      <template v-else>
+        <img :src="logo" alt="" class="m-b-5 max-h-100" />
+        <div class="clearfix"></div>
+        <button
+          v-if="logo"
+          type="button"
+          @click="changeLogo()"
+          class="btn btn-default"
+        >
+          {{ l("QRCodeSettings.reset") }}
+        </button>
+      </template>
       <p class="text-left text-bold">
         <strong>
           {{ l("QRCodeSettings.pleaseScan") }}
@@ -47,18 +56,22 @@
       <p class="text-left">{{ l("QRCodeSettings.theColor") }}</p>
     </PanelSetting>
     <PanelSetting id="frame" :title="l('QRCodeSettings.frame')">
-      <div class="form-group input--fileupload">
+      <div class="form-group input--fileupload" v-if="!frame">
         <label ref="frameLabel">{{ l("QRCodeSettings.upload") }}</label>
         <input
           type="file"
           id="image"
-          @change="changeFrame"
+          @input="changeFrame"
           accept="image/png, image/jpeg"
         />
       </div>
-      <button type="button" @click="changeFrame()" class="btn btn-default">
-        {{ l("QRCodeSettings.reset") }}
-      </button>
+      <template v-else>
+        <img :src="frame" alt="" class="m-b-5 max-h-100" />
+        <div class="clearfix"></div>
+        <button type="button" @click="changeFrame()" class="btn btn-default">
+          {{ l("QRCodeSettings.reset") }}
+        </button>
+      </template>
     </PanelSetting>
   </div>
 </template>
@@ -88,8 +101,10 @@ export default Vue.extend({
         "#c843ed",
         "#384af0"
       ],
-      color: "#0066ff",
-      showPicker: false
+      color: "#000000",
+      showPicker: false,
+      logo: "",
+      frame: ""
     };
   },
   /**
@@ -134,6 +149,14 @@ export default Vue.extend({
       fileReader.readAsDataURL(files[0]);
     },
     changeInput(event, labelRef, emitter) {
+      if (event === undefined) {
+        this.$emit(emitter, "");
+        this[emitter] = "";
+        setTimeout(() => {
+          labelRef.innerText = this.l("QRCodeSettings.upload");
+        }, 100);
+        return;
+      }
       if (event && event.target.files && event.target.files[0]) {
         let name = event.target.files[0].name;
         if (name.length > 20) {
@@ -143,17 +166,21 @@ export default Vue.extend({
         }
         labelRef.innerText = name;
         this.imageToBase64(event, result => {
+          this[emitter] = result;
           this.$emit(emitter, result);
         });
-      } else {
-        labelRef.innerText = this.l("QRCodeSettings.upload");
-        this.$emit(emitter, "");
       }
     },
     changeLogo(event) {
+      if (event !== undefined && !event.target.value) {
+        return;
+      }
       this.changeInput(event, this.$refs.logoLabel, "logo");
     },
     changeFrame(event) {
+      if (event !== undefined && !event.target.value) {
+        return;
+      }
       this.changeInput(event, this.$refs.frameLabel, "frame");
     },
     updateColor(color) {

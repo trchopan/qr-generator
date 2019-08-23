@@ -1,20 +1,19 @@
 <template>
-  <form @submit.prevent="onSubmit(url)">
-    <div class="form-group">
-      <input
-        type="text"
-        class="form-control"
-        id="link"
-        v-model="url"
-        :placeholder="l('URLForm.enterUrl')"
-      />
-    </div>
-  </form>
+  <div class="form-group col-xs-12">
+    <input
+      type="text"
+      class="form-control"
+      id="link"
+      v-model="url"
+      :placeholder="l('URLForm.enterUrl')"
+    />
+  </div>
 </template>
 
 <script>
 import Vue from "vue";
 import QRCode from "qrcode";
+import { debounce } from "lodash";
 
 export default Vue.extend({
   name: "URLForm",
@@ -26,8 +25,11 @@ export default Vue.extend({
       return;
     }
     setTimeout(() => {
-      this.onSubmit("wogasdfasdf");
+      this.url = "fasdfasdfasf23frf";
     }, 500);
+  },
+  created() {
+    this.debouncedInput = debounce(this.changeUrl, 350);
   },
   data() {
     return {
@@ -35,9 +37,13 @@ export default Vue.extend({
     };
   },
   methods: {
-    async getSvg(svg) {
-      return await QRCode.toString(svg, {
+    async getSvg(url) {
+      if (!url) {
+        return "";
+      }
+      return await QRCode.toString([{ data: url, mode: "byte" }], {
         type: "svg",
+        errorCorrectionLevel: "L",
         margin: 1,
         color: {
           light: "#ffffff",
@@ -45,9 +51,9 @@ export default Vue.extend({
         }
       });
     },
-    async onSubmit(url) {
-      this.$emit("url", url);
-      this.$emit("svg", await this.getSvg(url));
+    async changeUrl() {
+      this.$emit("url", this.url);
+      this.$emit("svg", await this.getSvg(this.url));
     }
   },
   watch: {
@@ -55,6 +61,9 @@ export default Vue.extend({
       if (this.url) {
         this.$emit("svg", await this.getSvg(this.url));
       }
+    },
+    url() {
+      this.debouncedInput();
     }
   }
 });

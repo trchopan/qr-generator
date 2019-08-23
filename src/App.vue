@@ -6,23 +6,23 @@
           :color="color"
           @url="url = $event"
           @svg="svg = $event"
-          class="no-print col-xs-10"
+          class="no-print"
         />
-        <div class="col-xs-2">
-          <button
-            class="btn btn-default"
-            type="button"
-            data-toggle="modal"
-            data-target="#exampleModal"
-          >
-            <i class="fa fa-code"></i>
-          </button>
-          <EmbededModal :url="url" />
-        </div>
       </div>
       <div class="row" key="qr-step">
-        <div v-if="url" class="col-md-8">
-          <div class="ma-5">
+        <div v-if="url" class="col-md-8 p-relative">
+          <div>
+            <button
+              class="btn btn-default embeded-button"
+              type="button"
+              data-toggle="modal"
+              data-target="#exampleModal"
+            >
+              <i class="fa fa-code"></i>
+            </button>
+            <EmbededModal :url="url" :size="size" />
+          </div>
+          <div>
             <DisplayQRSvg
               ref="displaySvg"
               :url="url"
@@ -30,6 +30,7 @@
               :color="color"
               :logo="logo"
               :frame="frame"
+              @newSize="size = $event"
             />
           </div>
         </div>
@@ -86,7 +87,8 @@ export default {
       url: "",
       color: "",
       logo: "",
-      frame: ""
+      frame: "",
+      size: "256"
     };
   }
 };
@@ -113,5 +115,21 @@ export default {
 .mx-1 {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+}
+.m-b-5 {
+  margin-bottom: 0.5rem;
+}
+.max-h-100 {
+  max-height: 100px;
+}
+.p-relative {
+  position: relative;
+}
+.embeded-button {
+  position: absolute;
+  z-index: 100;
+  opacity: 0.7;
+  right: 32px;
+  top: 16px;
 }
 </style>

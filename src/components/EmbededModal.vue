@@ -10,7 +10,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
+          <h5 class="modal-title" style="display: inline">
             {{ l("EmbededModal.embedQr") }}
           </h5>
           <button
@@ -51,13 +51,16 @@ import Vue from "vue";
 export default Vue.extend({
   name: "EmbededModal",
   props: {
-    url: String
+    url: String,
+    size: String
   },
   computed: {
     embededLink() {
-      const format =
-        "<img src='https://chart.googleapis.com/chart?cht=qr&chl={}&chs=180x180&choe=UTF-8&chld=L|2' alt=''>";
-      return format.replace("{}", this.url);
+      const _size = parseInt(this.size, 10);
+      const size = _size > 540 ? "540" : _size < 100 ? "100" : _size;
+      return `<img src='https://chart.googleapis.com/chart?cht=qr&chl=${
+        this.url
+      }&chs=${size}x${size}&choe=UTF-8&chld=L|2' alt=''>`;
     }
   },
   methods: {

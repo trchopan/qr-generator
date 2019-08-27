@@ -52,14 +52,22 @@
             >
               {{ l("App.saveQR") }}
             </button>
-            <button
-              v-if="url && frame"
-              class="btn btn-default ma-5"
-              type="button"
-              @click.prevent="$refs.displaySvg.saveCanvas()"
-            >
-              {{ l("App.saveWithFrame") }}
-            </button>
+            <template v-if="url && frame">
+              <button
+                class="btn btn-default ma-5"
+                type="button"
+                @click.prevent="$refs.displaySvg.saveCanvas('png')"
+              >
+                {{ l("App.saveWithFramePng") }}
+              </button>
+              <button
+                class="btn btn-default ma-5"
+                type="button"
+                @click.prevent="$refs.displaySvg.saveCanvas('jpg')"
+              >
+                {{ l("App.saveWithFrameJpg") }}
+              </button>
+            </template>
           </div>
         </div>
       </div>

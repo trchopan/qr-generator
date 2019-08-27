@@ -80,7 +80,6 @@
 import Vue from "vue";
 import PanelSetting from "./PanelSetting";
 import { Chrome } from "vue-color";
-import BackgroundImage from "@/assets/background.jpg";
 
 export default Vue.extend({
   name: "QRCodeSettings",
@@ -125,7 +124,7 @@ export default Vue.extend({
         this.$emit("frame", result);
       });
     };
-    xhr.open("GET", BackgroundImage);
+    xhr.open("GET", "https://picsum.photos/600");
     xhr.responseType = "blob";
     setTimeout(() => {
       xhr.send();

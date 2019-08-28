@@ -28,6 +28,7 @@ export default Vue.extend({
     // setTimeout(() => {
     //   this.url = "fasdfasdfasf23frf";
     // }, 500);
+    if(this.url) this.changeUrl();
   },
   created() {
     this.debouncedInput = debounce(this.changeUrl, 350);
@@ -38,11 +39,11 @@ export default Vue.extend({
   //   };
   // },
   methods: {
-    async getSvg(url) {
-      if (!url) {
+    async getSvg() {
+      if (!this.url) {
         return "";
       }
-      return await QRCode.toString([{ data: url, mode: "byte" }], {
+      return await QRCode.toString([{ data: this.url, mode: "byte" }], {
         type: "svg",
         errorCorrectionLevel: "L",
         margin: 1,
@@ -54,13 +55,13 @@ export default Vue.extend({
     },
     async changeUrl() {
       this.$emit("url", this.url);
-      this.$emit("svg", await this.getSvg(this.url));
+      this.$emit("svg", await this.getSvg());
     }
   },
   watch: {
     async color() {
       if (this.url) {
-        this.$emit("svg", await this.getSvg(this.url));
+        this.$emit("svg", await this.getSvg());
       }
     },
     url() {

@@ -34,15 +34,17 @@ export default Vue.extend({
     svg: String,
     color: String,
     logo: String,
-    size: Number
+    size: Number,
+    top: Number,
+    left: Number
   },
   data() {
     return {
       showSvg: true,
       // width: 256,
       // height: 256,
-      top: 0,
-      left: 0
+      // top: 0,
+      // left: 0
     };
   },
   methods: {
@@ -97,12 +99,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.frame--container {
-  height: 100%;
-  img {
-    width: 100%;
-  }
-}
-</style>

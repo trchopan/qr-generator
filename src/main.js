@@ -18,7 +18,7 @@ Vue.mixin({
   }
 });
 
-let defaultLanguage = "en";
+let defaultLanguage = "en_US";
 
 const xhr = new XMLHttpRequest();
 xhr.onload = () => {

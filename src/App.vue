@@ -6,7 +6,7 @@
       </div>
       <div class="row" key="qr-step">
         <div class="col-md-8">
-          <URLForm :color="color" :url="url" @url="url = $event" @svg="svg = $event" class="no-print" />
+          <URLForm :color="color" :url="url" @url="url = $event" :svg="svg" @svg="svg = $event" class="no-print" />
           <div v-if="url" class="p-relative">
               <div>
               <button
@@ -27,7 +27,9 @@
                 :color="color"
                 :logo="logo"
                 :frame="frame"
-                :site="size"
+                :size="size"
+                :top="top"
+                :left="left"
                 @newSize="size = $event"
               />
             </div>
@@ -99,7 +101,9 @@ export default {
       color: query.color ? query.color : "#000000",
       logo: query.logo ? query.logo : "",
       frame: query.frame ? query.frame : "",
-      size: query.size ? query.size : "256"
+      size: query.size ? parseInt(query.size) : 256,
+      top: query.top ? parseInt(query.top) : 0,
+      left: query.left ? parseInt(query.left) : 0
     };
   }
 };

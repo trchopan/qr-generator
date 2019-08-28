@@ -6,8 +6,8 @@
         v-if="showSvg"
         parentLimitation
         aspectRatio
-        :w="256"
-        :h="256"
+        :w="size"
+        :h="size"
         @resizing="resize"
         @dragging="resize"
       >
@@ -33,13 +33,14 @@ export default Vue.extend({
     url: String,
     svg: String,
     color: String,
-    logo: String
+    logo: String,
+    size: Number
   },
   data() {
     return {
       showSvg: true,
-      width: 256,
-      height: 256,
+      // width: 256,
+      // height: 256,
       top: 0,
       left: 0
     };

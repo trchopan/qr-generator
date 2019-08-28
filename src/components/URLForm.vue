@@ -18,7 +18,8 @@ import { debounce } from "lodash";
 export default Vue.extend({
   name: "URLForm",
   props: {
-    color: String
+    color: String,
+    url: String
   },
   mounted() {
     if (process.env.NODE_ENV === "production") {
@@ -31,11 +32,11 @@ export default Vue.extend({
   created() {
     this.debouncedInput = debounce(this.changeUrl, 350);
   },
-  data() {
-    return {
-      url: ""
-    };
-  },
+  // data() {
+  //   return {
+  //     url: this.url
+  //   };
+  // },
   methods: {
     async getSvg(url) {
       if (!url) {

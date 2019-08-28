@@ -6,7 +6,7 @@
       </div>
       <div class="row" key="qr-step">
         <div class="col-md-8">
-          <URLForm :color="color" @url="url = $event" @svg="svg = $event" class="no-print" />
+          <URLForm :color="color" :url="url" @url="url = $event" @svg="svg = $event" class="no-print" />
           <div v-if="url" class="p-relative">
               <div>
               <button
@@ -27,6 +27,7 @@
                 :color="color"
                 :logo="logo"
                 :frame="frame"
+                :site="size"
                 @newSize="size = $event"
               />
             </div>
@@ -36,7 +37,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <QRCodeSettings @color="color = $event" @logo="logo = $event" @frame="frame = $event" />
+          <QRCodeSettings @color="color = $event" :color="color" @logo="logo = $event" @frame="frame = $event" />
           <div class="text-center">
             <button
               v-if="url && !frame"
@@ -65,7 +66,6 @@ import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";
 import DisplayQRSvg from "./components/DisplayQRSvg.vue";
 import EmbededModal from "./components/EmbededModal.vue";
-
 export default {
   name: "app",
   components: {
@@ -75,13 +75,25 @@ export default {
     EmbededModal
   },
   data() {
+    function getQueryParams(qs) {
+      qs = qs.split('+').join(' ');
+      var params = {},
+          tokens,
+          re = /[?&]?([^=]+)=([^&]*)/g;
+      while (tokens = re.exec(qs)) {
+        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+      }
+      return params;
+    }
+    var query = getQueryParams(document.location.search);
+    console.log(query);
     return {
       svg: "",
-      url: "",
-      color: "",
-      logo: "",
-      frame: "",
-      size: "256"
+      url: query.url ? query.url : "",
+      color: query.color ? query.color : "#000000",
+      logo: query.logo ? query.logo : "",
+      frame: query.frame ? query.frame : "",
+      size: query.size ? query.size : "256"
     };
   }
 };

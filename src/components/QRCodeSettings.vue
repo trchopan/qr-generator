@@ -71,6 +71,9 @@ import { Chrome } from "vue-color";
 
 export default Vue.extend({
   name: "QRCodeSettings",
+  props: {
+    color: String
+  },
   components: {
     PanelSetting,
     "chrome-picker": Chrome
@@ -88,7 +91,7 @@ export default Vue.extend({
         "#c843ed",
         "#384af0"
       ],
-      color: "#000000",
+      // color: "#000000",
       showPicker: false,
       logo: "",
       frame: ""

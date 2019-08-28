@@ -13,7 +13,8 @@
   "App": {
     "enterUrl": "Nhập đường dẫn",
     "saveQR": "Lưu QR dạng SVG",
-    "saveWithFrame": "Lưu QR với Khung dạng PNG"
+    "saveWithFramePng": "Lưu QR với Khung dạng PNG",
+    "saveWithFrameJpg": "Lưu QR với Khung dạng JPG"
   },
   "URLForm": {
     "enterUrl": "Nhập đường dẫn"

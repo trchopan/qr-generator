@@ -13,7 +13,8 @@
   "App": {
     "enterUrl": "Enter URL",
     "saveQR": "Save QR as SVG",
-    "saveWithFrame": "Save QR with Frame as PNG"
+    "saveWithFramePng": "Save QR with Frame as PNG",
+    "saveWithFrameJpg": "Save QR with Frame as JPG"
   },
   "URLForm": {
     "enterUrl": "Enter URL"

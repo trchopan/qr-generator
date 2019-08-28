@@ -49,8 +49,14 @@
               v-if="url && frame"
               class="btn btn-default ma-5"
               type="button"
-              @click.prevent="$refs.displaySvg.saveCanvas()"
-            >{{ l("App.saveWithFrame") }}</button>
+              @click.prevent="$refs.displaySvg.saveCanvas('png')"
+            >{{ l("App.saveWithFramePng") }}</button>
+            <button
+              v-if="url && frame"
+              class="btn btn-default ma-5"
+              type="button"
+              @click.prevent="$refs.displaySvg.saveCanvas('jpg')"
+            >{{ l("App.saveWithFrameJpg") }}</button>
           </div>
         </div>
       </div>

@@ -69,7 +69,7 @@ export default Vue.extend({
       this.left = newRect.left;
       this.$emit("newSize", String(this.width));
     },
-    saveCanvas() {
+    saveCanvas(type) {
       const canvas = this.$refs.canvasRef;
       const frame = this.$refs.frameRef;
       const frameW = this.$refs.frameContainer.offsetWidth;
@@ -81,8 +81,8 @@ export default Vue.extend({
       ctx.drawImage(frame, 0, 0, frameW, frameH);
       svg.onload = () => {
         ctx.drawImage(svg, this.left, this.top, this.width, this.height);
-        const png = canvas.toDataURL("image/png");
-        this.doSave(png, "qr-code.png");
+        const png = canvas.toDataURL("image/" + type);
+        this.doSave(png, "qr-code." + type);
       };
       svg.src = this.getSvgBlob();
     }
@@ -97,3 +97,12 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style lang="scss" scoped>
+.frame--container {
+  height: 100%;
+  img {
+    width: 100%;
+  }
+}
+</style>

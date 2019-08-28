@@ -6,12 +6,20 @@
         v-if="showSvg"
         parentLimitation
         aspectRatio
-        :w="size"
-        :h="size"
+        :x="dimension.left"
+        :y="dimension.top"
+        :w="dimension.size"
+        :h="dimension.size"
         @resizing="resize"
         @dragging="resize"
       >
-        <CombinedSvg ref="qrSvg" :urlLength="url.length" :svg="svg" :color="color" :logo="logo" />
+        <CombinedSvg
+          ref="qrSvg"
+          :urlLength="url.length"
+          :svg="svg"
+          :color="color"
+          :logo="logo"
+        />
       </VueDragResize>
     </div>
     <canvas ref="canvasRef" v-show="false" />
@@ -34,17 +42,24 @@ export default Vue.extend({
     svg: String,
     color: String,
     logo: String,
-    size: Number,
-    top: Number,
-    left: Number
+    value: Object
   },
   data() {
     return {
-      showSvg: true,
-      // width: 256,
-      // height: 256,
-      // top: 0,
-      // left: 0
+      showSvg: false,
+      dimension: {
+        size: 256,
+        top: 0,
+        left: 0
+      }
+    };
+  },
+  created() {
+    this.dimension = this.value;
+  },
+  mounted() {
+    this.$refs.frameRef.onload = () => {
+      this.showSvg = true;
     };
   },
   methods: {
@@ -65,11 +80,12 @@ export default Vue.extend({
       this.doSave(this.getSvgBlob(), "qr-code.svg");
     },
     resize(newRect) {
-      this.width = newRect.width;
-      this.height = newRect.height;
-      this.top = newRect.top;
-      this.left = newRect.left;
-      this.$emit("newSize", String(this.width));
+      this.dimension = {
+        top: newRect.top,
+        left: newRect.left,
+        size: newRect.width
+      };
+      this.$emit("input", this.dimension);
     },
     saveCanvas(type) {
       const canvas = this.$refs.canvasRef;
@@ -77,12 +93,15 @@ export default Vue.extend({
       const frameW = this.$refs.frameContainer.offsetWidth;
       const frameH = this.$refs.frameContainer.offsetHeight;
       const svg = new Image();
+      svg.crossOrigin = "anonymous";
+      frame.crossOrigin = "anonymous";
       canvas.width = frameW;
       canvas.height = frameH;
       const ctx = canvas.getContext("2d");
       ctx.drawImage(frame, 0, 0, frameW, frameH);
       svg.onload = () => {
-        ctx.drawImage(svg, this.left, this.top, this.width, this.height);
+        const { size, left, top } = this.dimension;
+        ctx.drawImage(svg, left, top, size, size);
         const png = canvas.toDataURL("image/" + type);
         this.doSave(png, "qr-code." + type);
       };
@@ -90,11 +109,13 @@ export default Vue.extend({
     }
   },
   watch: {
-    frame() {
+    frame(val) {
       this.showSvg = false;
-      setTimeout(() => {
-        this.showSvg = true;
-      }, 500);
+      if (!val) {
+        setTimeout(() => {
+          this.showSvg = true;
+        }, 500);
+      }
     }
   }
 });

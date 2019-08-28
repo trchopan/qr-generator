@@ -1,43 +1,36 @@
 <template>
-<div class="form-group">
-  <input
-    type="text"
-    class="form-control"
-    id="link"
-    v-model="url"
-    :placeholder="l('URLForm.enterUrl')"
-  />
-</div>
+  <div class="form-group">
+    <input
+      type="text"
+      class="form-control"
+      id="link"
+      v-model="url"
+      :placeholder="l('URLForm.enterUrl')"
+    />
+  </div>
 </template>
 
 <script>
 import Vue from "vue";
 import QRCode from "qrcode";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 export default Vue.extend({
   name: "URLForm",
   props: {
     color: String,
-    url: String
+    value: String
   },
-  mounted() {
-    if (process.env.NODE_ENV === "production") {
-      return;
-    }
-    // setTimeout(() => {
-    //   this.url = "fasdfasdfasf23frf";
-    // }, 500);
-    if(this.url) this.changeUrl();
+  data() {
+    return {
+      url: ""
+    };
   },
   created() {
+    this.url = this.value;
     this.debouncedInput = debounce(this.changeUrl, 350);
+    this.debouncedInput();
   },
-  // data() {
-  //   return {
-  //     url: this.url
-  //   };
-  // },
   methods: {
     async getSvg() {
       if (!this.url) {
@@ -54,13 +47,13 @@ export default Vue.extend({
       });
     },
     async changeUrl() {
-      this.$emit("url", this.url);
+      this.$emit("input", this.url);
       this.$emit("svg", await this.getSvg());
     }
   },
   watch: {
     async color() {
-      if (this.url) {
+      if (this.value) {
         this.$emit("svg", await this.getSvg());
       }
     },

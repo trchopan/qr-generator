@@ -1,14 +1,17 @@
 <template>
   <div id="app">
     <div class="container">
-      <div class="row">
-
-      </div>
+      <div class="row"></div>
       <div class="row" key="qr-step">
         <div class="col-md-8">
-          <URLForm :color="color" :url="url" @url="url = $event" :svg="svg" @svg="svg = $event" class="no-print" />
+          <URLForm
+            v-model="url"
+            :color="settings.color"
+            @svg="svg = $event"
+            class="no-print"
+          />
           <div v-if="url" class="p-relative">
-              <div>
+            <div>
               <button
                 class="btn embeded-button"
                 type="button"
@@ -17,48 +20,52 @@
               >
                 <i class="fa fa-code"></i>
               </button>
-              <EmbededModal :url="url" :size="size" />
+              <EmbededModal :url="url" :size="dimension.size" />
             </div>
             <div>
               <DisplayQRSvg
                 ref="displaySvg"
+                v-model="dimension"
                 :url="url"
                 :svg="svg"
-                :color="color"
-                :logo="logo"
-                :frame="frame"
-                :size="size"
-                :top="top"
-                :left="left"
-                @newSize="size = $event"
+                :settings="settings"
+                :color="settings.color"
+                :logo="settings.logo"
+                :frame="settings.frame"
               />
             </div>
           </div>
-            <div v-else class="col-md-8">
+          <div v-else class="col-md-8">
             <p class="text-center ma-5"></p>
           </div>
         </div>
         <div class="col-md-4">
-          <QRCodeSettings @color="color = $event" :color="color" @logo="logo = $event" @frame="frame = $event" />
+          <QRCodeSettings v-model="settings" />
           <div class="text-center">
             <button
-              v-if="url && !frame"
+              v-if="url && !settings.frame"
               class="btn btn-default mx-1"
               type="button"
               @click.prevent="$refs.displaySvg.saveSvg()"
-            >{{ l("App.saveQR") }}</button>
+            >
+              {{ l("App.saveQR") }}
+            </button>
             <button
-              v-if="url && frame"
+              v-if="url && settings.frame"
               class="btn btn-default ma-5"
               type="button"
               @click.prevent="$refs.displaySvg.saveCanvas('png')"
-            >{{ l("App.saveWithFramePng") }}</button>
+            >
+              {{ l("App.saveWithFramePng") }}
+            </button>
             <button
-              v-if="url && frame"
+              v-if="url && settings.frame"
               class="btn btn-default ma-5"
               type="button"
               @click.prevent="$refs.displaySvg.saveCanvas('jpg')"
-            >{{ l("App.saveWithFrameJpg") }}</button>
+            >
+              {{ l("App.saveWithFrameJpg") }}
+            </button>
           </div>
         </div>
       </div>
@@ -83,28 +90,46 @@ export default {
     EmbededModal
   },
   data() {
-    function getQueryParams(qs) {
-      qs = qs.split('+').join(' ');
-      var params = {},
-          tokens,
-          re = /[?&]?([^=]+)=([^&]*)/g;
-      while (tokens = re.exec(qs)) {
+    return {
+      svg: "",
+      url: "",
+      settings: {
+        color: "#000000",
+        logo: "",
+        frame: ""
+      },
+      dimension: {
+        size: 256,
+        top: 0,
+        left: 0
+      }
+    };
+  },
+  methods: {
+    getQueryParams(qs) {
+      qs = qs.split("+").join(" ");
+      const re = /[?&]?([^=]+)=([^&]*)/g;
+      const params = {};
+      let tokens;
+      while ((tokens = re.exec(qs))) {
         params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
       }
       return params;
     }
-    var query = getQueryParams(document.location.search);
-    console.log(query);
-    return {
-      svg: "",
-      url: query.url ? query.url : "",
-      color: query.color ? query.color : "#000000",
-      logo: query.logo ? query.logo : "",
-      frame: query.frame ? query.frame : "",
-      size: query.size ? parseInt(query.size) : 256,
-      top: query.top ? parseInt(query.top) : 0,
-      left: query.left ? parseInt(query.left) : 0
-    };
+  },
+  created() {
+    const query = this.getQueryParams(document.location.search);
+    this.url = query.url || "";
+    this.settings.color = query.color || "#000000";
+    this.settings.logo = query.logo || "";
+    this.settings.frame = query.frame || "";
+    try {
+      this.dimension.size = query.size ? parseInt(query.size) : 256;
+      this.dimension.top = query.top ? parseInt(query.top) : 0;
+      this.dimension.left = query.left ? parseInt(query.left) : 0;
+    } catch (error) {
+      console.error("Error changing dimention", error);
+    }
   }
 };
 </script>

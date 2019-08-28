@@ -56,9 +56,12 @@ export default Vue.extend({
   },
   computed: {
     embededLink() {
-      const _size = this.size;
-      const size = _size > 540 ? 540 : _size < 100 ? 100 : _size;
-      return `<img src='https://chart.googleapis.com/chart?cht=qr&chl=${this.url}&chs=${size}x${size}&choe=UTF-8&chld=L|2' alt=''>`;
+      const size = this.size > 540 ? 540 : this.size < 100 ? 100 : this.size;
+      return (
+        "<img src='https://chart.googleapis.com/chart?cht=qr&chl=" +
+        this.url +
+        `&chs=${size}x${size}&choe=UTF-8&chld=L|2' alt=''>`
+      );
     }
   },
   methods: {

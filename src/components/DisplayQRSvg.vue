@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="frameContainer" class="frame--container">
-      <img ref="frameRef" :src="frame" alt="" />
+      <img ref="frameRef" :src="frame" alt />
       <VueDragResize
         v-if="showSvg"
         parentLimitation
@@ -11,13 +11,7 @@
         @resizing="resize"
         @dragging="resize"
       >
-        <CombinedSvg
-          ref="qrSvg"
-          :urlLength="url.length"
-          :svg="svg"
-          :color="color"
-          :logo="logo"
-        />
+        <CombinedSvg ref="qrSvg" :urlLength="url.length" :svg="svg" :color="color" :logo="logo" />
       </VueDragResize>
     </div>
     <canvas ref="canvasRef" v-show="false" />
@@ -102,10 +96,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.frame--container {
-  position: relative;
-  min-height: 540px;
-}
-</style>

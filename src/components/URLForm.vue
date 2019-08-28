@@ -1,13 +1,13 @@
 <template>
-  <div class="form-group col-xs-12">
-    <input
-      type="text"
-      class="form-control"
-      id="link"
-      v-model="url"
-      :placeholder="l('URLForm.enterUrl')"
-    />
-  </div>
+<div class="form-group">
+  <input
+    type="text"
+    class="form-control"
+    id="link"
+    v-model="url"
+    :placeholder="l('URLForm.enterUrl')"
+  />
+</div>
 </template>
 
 <script>
@@ -24,9 +24,9 @@ export default Vue.extend({
     if (process.env.NODE_ENV === "production") {
       return;
     }
-    setTimeout(() => {
-      this.url = "fasdfasdfasf23frf";
-    }, 500);
+    // setTimeout(() => {
+    //   this.url = "fasdfasdfasf23frf";
+    // }, 500);
   },
   created() {
     this.debouncedInput = debounce(this.changeUrl, 350);

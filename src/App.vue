@@ -11,7 +11,7 @@
             class="no-print"
           />
           <div v-if="url" class="p-relative">
-            <div>
+            <div class="no-print">
               <button
                 class="btn embeded-button"
                 type="button"
@@ -75,6 +75,7 @@
 <style lang="scss">
 @import "~normalize.css/normalize.css";
 @import "assets/css/app.scss";
+@import "assets/css/qr-generator.print.scss";
 </style>
 <script>
 import URLForm from "./components/URLForm.vue";

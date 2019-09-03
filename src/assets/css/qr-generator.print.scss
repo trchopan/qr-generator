@@ -1,0 +1,19 @@
+.top-wrapper.top-navigator,
+.navbar-wrapper,
+.footer,
+.no-print,
+.col-md-4
+{
+  display: none;
+}
+body{
+  margin: 0;
+}
+.p-relative{
+  width: 750px;
+  position: relative;
+  margin: 0 auto;
+  img{
+    max-width: 100%;
+  }
+}

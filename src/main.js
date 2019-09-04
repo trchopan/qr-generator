@@ -28,5 +28,4 @@ xhr.onload = () => {
   }).$mount("#app");
 };
 xhr.open("GET", `languages/${defaultLanguage}.json`);
-xhr.responseType = "application/json";
 xhr.send();

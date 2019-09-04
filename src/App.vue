@@ -44,7 +44,7 @@
           <div class="text-center">
             <button
               v-if="url && !settings.frame"
-              class="btn btn-default mx-1"
+              class="btn btn-default ma-5"
               type="button"
               @click.prevent="$refs.displaySvg.saveSvg()"
             >
@@ -72,11 +72,6 @@
     </div>
   </div>
 </template>
-<style lang="scss">
-@import "~normalize.css/normalize.css";
-@import "assets/css/app.scss";
-@import "assets/css/qr-generator.print.scss";
-</style>
 <script>
 import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";
@@ -120,14 +115,14 @@ export default {
   },
   created() {
     const query = this.getQueryParams(document.location.search);
-    this.url = query.url || "";
-    this.settings.color = query.color || "#000000";
-    this.settings.logo = query.logo || "";
-    this.settings.frame = query.frame || "";
+    this.url = query.url || this.url;
+    ["color", "logo", "frame"].forEach(attr => {
+      this.settings[attr] = query[attr] || this.settings[attr]
+    })
     try {
-      this.dimension.size = query.size ? parseInt(query.size) : 256;
-      this.dimension.top = query.top ? parseInt(query.top) : 0;
-      this.dimension.left = query.left ? parseInt(query.left) : 0;
+      ["size", "top", "left"].forEach(attr => {
+        this.dimension[attr] = query[attr] ? parseInt(query[attr]) : this.dimension[attr]
+      })
     } catch (error) {
       console.error("Error changing dimention", error);
     }

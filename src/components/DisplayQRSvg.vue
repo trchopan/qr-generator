@@ -46,7 +46,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      showSvg: false,
+      showSvg: true,
       dimension: {
         size: 256,
         top: 0,

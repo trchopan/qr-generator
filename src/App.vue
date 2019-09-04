@@ -118,7 +118,6 @@ export default {
     },
     setWidth() {
       let pRelative = document.getElementsByClassName('p-relative')[0];
-      console.log(pRelative);
       if(pRelative) pRelative.style.width = (pRelative.parentElement.offsetWidth - 30) + "px";
     }
   },
@@ -136,6 +135,11 @@ export default {
       });
     } catch (error) {
       console.error("Error changing dimention", error);
+    }
+    if(query.print){
+      setTimeout(function() {
+        window.print();
+      }, 1000)
     }
   },
   mounted() {

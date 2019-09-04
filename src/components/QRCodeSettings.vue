@@ -132,6 +132,7 @@ export default Vue.extend({
         this.settings[emitter] = "";
         this.$emit("input", this.settings);
         setTimeout(() => {
+          this.$emit("reset", true);
           if (labelRef) labelRef.innerText = this.l("QRCodeSettings.upload");
         }, 100);
         return;

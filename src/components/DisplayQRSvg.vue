@@ -31,6 +31,12 @@
 import Vue from "vue";
 import CombinedSvg from "./CombinedSvg";
 
+const defaultDimension = {
+  size: 256,
+  top: 0,
+  left: 0
+};
+
 export default Vue.extend({
   name: "DisplayQRSvg",
   components: {
@@ -47,11 +53,7 @@ export default Vue.extend({
   data() {
     return {
       showSvg: true,
-      dimension: {
-        size: 256,
-        top: 0,
-        left: 0
-      }
+      dimension: defaultDimension
     };
   },
   created() {
@@ -63,6 +65,9 @@ export default Vue.extend({
     };
   },
   methods: {
+    reset() {
+      this.dimension = defaultDimension;
+    },
     doSave(item, name) {
       this.$refs.downloadLink.href = item;
       this.$refs.downloadLink.download = name;

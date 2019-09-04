@@ -14,7 +14,6 @@
     "bootstrap-colorpicker": "^2.5.3",
     "core-js": "^2.6.5",
     "html2canvas": "^1.0.0-rc.3",
-    "normalize.css": "^8.0.1",
     "qrcode": "^1.4.1",
     "qrcode-svg": "^1.0.0",
     "vue": "^2.6.10",

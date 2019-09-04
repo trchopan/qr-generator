@@ -1,6 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
 import VueDragResize from "vue-drag-resize";
+import "@/assets/css/app.scss";
+import "@/assets/css/qr-generator.print.scss";
 
 Vue.config.productionTip = false;
 Vue.component("VueDragResize", VueDragResize);

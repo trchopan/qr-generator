@@ -72,11 +72,7 @@
     </div>
   </div>
 </template>
-<style lang="scss">
-@import "~normalize.css/normalize.css";
-@import "assets/css/app.scss";
-@import "assets/css/qr-generator.print.scss";
-</style>
+
 <script>
 import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";

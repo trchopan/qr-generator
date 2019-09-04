@@ -119,15 +119,15 @@ export default {
   },
   created() {
     const query = this.getQueryParams(document.location.search);
-    this.url = query.url || this.url;
+    this.url = query.url || window.QRCodeSettings['url'] || this.url;
     ["color", "logo", "frame"].forEach(attr => {
-      this.settings[attr] = query[attr] || this.settings[attr];
+      this.settings[attr] = query[attr] || window.QRCodeSettings[attr] || this.settings[attr];
     });
     try {
       ["size", "top", "left"].forEach(attr => {
         this.dimension[attr] = query[attr]
           ? parseInt(query[attr])
-          : this.dimension[attr];
+          : window.QRCodeSettings[attr] || this.dimension[attr];
       });
     } catch (error) {
       console.error("Error changing dimention", error);

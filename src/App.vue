@@ -80,6 +80,7 @@ import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";
 import DisplayQRSvg from "./components/DisplayQRSvg.vue";
 import EmbededModal from "./components/EmbededModal.vue";
+import { setTimeout } from 'timers';
 export default {
   name: "app",
   components: {
@@ -114,6 +115,11 @@ export default {
         params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
       }
       return params;
+    },
+    setWidth() {
+      let pRelative = document.getElementsByClassName('p-relative')[0];
+      console.log(pRelative);
+      if(pRelative) pRelative.style.width = (pRelative.parentElement.offsetWidth - 30) + "px";
     }
   },
   created() {
@@ -130,6 +136,21 @@ export default {
       });
     } catch (error) {
       console.error("Error changing dimention", error);
+    }
+  },
+  mounted() {
+    this.setWidth();
+    let elem = this;
+    window.addEventListener('resize', function() {
+      elem.setWidth();
+    });
+  },
+  watch: {
+    url() {
+      let elem = this;
+      setTimeout(function(){
+        elem.setWidth();
+      }, 500)
     }
   }
 };

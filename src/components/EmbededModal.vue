@@ -17,7 +17,7 @@
             type="button"
             class="close"
             data-dismiss="modal"
-            aria-label="Close"
+            :aria-label="l('EmbededModal.close')"
           >
             <span aria-hidden="true">&times;</span>
           </button>
@@ -34,7 +34,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
+            {{ l("EmbededModal.close") }}
           </button>
           <button type="button" class="btn btn-primary" @click="copyClipboard">
             {{ l("EmbededModal.copy") }}

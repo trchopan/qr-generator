@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <div class="container">
-      <div class="row"></div>
       <div class="row" key="qr-step">
         <div class="col-md-8">
           <URLForm

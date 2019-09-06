@@ -22,6 +22,7 @@
   "EmbededModal": {
     "embedQr": "Embed QR code on your website",
     "copy": "Copy to Clipboard",
-    "copied": "The embedded code is copied"
+    "copied": "The embedded code is copied",
+    "close": "Close"
   }
 }

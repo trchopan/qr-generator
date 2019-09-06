@@ -21,6 +21,15 @@
           :logo="logo"
         />
       </VueDragResize>
+      <VueDragResize
+        v-for="(txt, index) in text"
+        :key="'text-dragable-' + index"
+        parentLimitation
+      >
+        <div :style="{ color: txt.color, fontSize: '2rem' }">
+          {{ txt.value }}
+        </div>
+      </VueDragResize>
     </div>
     <canvas ref="canvasRef" v-show="false" />
     <a ref="downloadLink" v-show="false"></a>
@@ -48,7 +57,8 @@ export default Vue.extend({
     svg: String,
     color: String,
     logo: String,
-    value: Object
+    value: Object,
+    text: Array
   },
   data() {
     return {

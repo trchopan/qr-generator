@@ -51,6 +51,40 @@
       <p class="text-left">{{ l("QRCodeSettings.beware") }}</p>
       <p class="text-left">{{ l("QRCodeSettings.theColor") }}</p>
     </PanelSetting>
+    <PanelSetting id="text" :title="l('QRCodeSettings.text')">
+      <div
+        v-for="(txt, index) in text"
+        :key="'text-' + index"
+        class="form-group"
+      >
+        <div class="input-group" style="width: 100%; display: flex">
+          <input
+            type="text"
+            class="form-control"
+            v-model="txt.value"
+            style="width: calc(100% - 2.5rem)"
+          />
+          <div
+            @click="txt.showPicker = !txt.showPicker"
+            class="color-select"
+            :style="'background-color: ' + txt.color"
+          ></div>
+        </div>
+        <chrome-picker
+          v-if="txt.showPicker"
+          @input="changeTextColor(index, $event.hex)"
+          :value="txt.color"
+          class="color-picker"
+        />
+      </div>
+      <button
+        class="btn btn-default ma-5"
+        type="button"
+        @click.prevent="addText"
+      >
+        {{ l("QRCodeSettings.addText") }}
+      </button>
+    </PanelSetting>
     <PanelSetting id="frame" :title="l('QRCodeSettings.frame')">
       <div class="form-group input--fileupload" v-if="!settings.frame">
         <label ref="frameLabel">{{ l("QRCodeSettings.upload") }}</label>
@@ -104,7 +138,8 @@ export default Vue.extend({
         color: "#000000",
         logo: "",
         frame: ""
-      }
+      },
+      text: []
     };
   },
   created() {
@@ -163,9 +198,21 @@ export default Vue.extend({
       }
       this.changeInput(event, this.$refs.frameLabel, "frame");
     },
+    changeTextColor(index, color) {
+      this.text[index].color = color;
+      // this.text[index].showPicker = false;
+    },
+    addText() {
+      this.text.push({ value: "", color: "#000000", showPicker: false });
+    },
     updateColor(color) {
       this.settings.color = color;
       this.$emit("input", this.settings);
+    }
+  },
+  watch: {
+    text() {
+      this.$emit("text", this.text);
     }
   }
 });

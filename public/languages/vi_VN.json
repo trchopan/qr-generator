@@ -8,7 +8,9 @@
     "reset": "Đặt lại",
     "plaseScan": "Vui lòng quét QR để kiểm tra",
     "beware": "Xem kỹ sự tương phản của màu QR và logo",
-    "theColor": "Màu sắc của logo phải khác với mã QR nếu không sẽ rất khó để quét"
+    "theColor": "Màu sắc của logo phải khác với mã QR nếu không sẽ rất khó để quét",
+    "text": "Chữ",
+    "addText": "Thêm chữ"
   },
   "App": {
     "enterUrl": "Nhập đường dẫn",

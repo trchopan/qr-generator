@@ -30,6 +30,7 @@
                 :settings="settings"
                 :color="settings.color"
                 :logo="settings.logo"
+                :text="text"
                 :frame="settings.frame"
               />
             </div>
@@ -42,6 +43,7 @@
           <QRCodeSettings
             v-model="settings"
             @reset="$refs.displaySvg.reset()"
+            @text="text = $event"
           />
           <div class="text-center">
             <button
@@ -52,22 +54,22 @@
             >
               {{ l("App.saveQR") }}
             </button>
-            <button
-              v-if="url && settings.frame"
-              class="btn btn-default ma-5"
-              type="button"
-              @click.prevent="$refs.displaySvg.saveCanvas('png')"
-            >
-              {{ l("App.saveWithFramePng") }}
-            </button>
-            <button
-              v-if="url && settings.frame"
-              class="btn btn-default ma-5"
-              type="button"
-              @click.prevent="$refs.displaySvg.saveCanvas('jpg')"
-            >
-              {{ l("App.saveWithFrameJpg") }}
-            </button>
+            <template v-if="url && settings.frame">
+              <button
+                class="btn btn-default ma-5"
+                type="button"
+                @click.prevent="$refs.displaySvg.saveCanvas('png')"
+              >
+                {{ l("App.saveWithFramePng") }}
+              </button>
+              <button
+                class="btn btn-default ma-5"
+                type="button"
+                @click.prevent="$refs.displaySvg.saveCanvas('jpg')"
+              >
+                {{ l("App.saveWithFrameJpg") }}
+              </button>
+            </template>
           </div>
         </div>
       </div>
@@ -103,7 +105,8 @@ export default {
         size: 256,
         top: 0,
         left: 0
-      }
+      },
+      text: []
     };
   },
   methods: {

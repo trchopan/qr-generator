@@ -80,7 +80,8 @@ import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";
 import DisplayQRSvg from "./components/DisplayQRSvg.vue";
 import EmbededModal from "./components/EmbededModal.vue";
-import { setTimeout } from 'timers';
+import { setTimeout } from "timers";
+
 export default {
   name: "app",
   components: {
@@ -117,44 +118,46 @@ export default {
       return params;
     },
     setWidth() {
-      let pRelative = document.getElementsByClassName('p-relative')[0];
-      if(pRelative) pRelative.style.width = (pRelative.parentElement.offsetWidth - 30) + "px";
+      let pRelative = document.getElementsByClassName("p-relative")[0];
+      if (pRelative)
+        pRelative.style.width = pRelative.parentElement.offsetWidth - 30 + "px";
     }
   },
   created() {
-    const query = this.getQueryParams(document.location.search);
-    this.url = query.url || window.QRCodeSettings['url'] || this.url;
+    const query =
+      this.getQueryParams(document.location.search) || window.QRCodeSettings;
+    this.url = query ? query.url : this.url;
     ["color", "logo", "frame"].forEach(attr => {
-      this.settings[attr] = query[attr] || window.QRCodeSettings[attr] || this.settings[attr];
+      this.settings[attr] =
+        query && query[attr] ? query[attr] : this.settings[attr];
     });
     try {
       ["size", "top", "left"].forEach(attr => {
-        this.dimension[attr] = query[attr]
-          ? parseInt(query[attr])
-          : window.QRCodeSettings[attr] || this.dimension[attr];
+        this.dimension[attr] =
+          query && query[attr] ? parseInt(query[attr]) : this.dimension[attr];
       });
     } catch (error) {
       console.error("Error changing dimention", error);
     }
-    if(query.print){
+    if (query.print) {
       setTimeout(function() {
         window.print();
-      }, 1000)
+      }, 1000);
     }
   },
   mounted() {
     this.setWidth();
     let elem = this;
-    window.addEventListener('resize', function() {
+    window.addEventListener("resize", function() {
       elem.setWidth();
     });
   },
   watch: {
     url() {
       let elem = this;
-      setTimeout(function(){
+      setTimeout(function() {
         elem.setWidth();
-      }, 500)
+      }, 500);
     }
   }
 };

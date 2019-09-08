@@ -6,7 +6,7 @@
           <div
             v-for="_color in colorPresets"
             :key="'color-' + _color"
-            @click="updateColor(_color)"
+            @click="changeColor(_color)"
             class="color-select"
             :class="{ selected: _color === color }"
             :style="'background-color: ' + _color"
@@ -17,7 +17,7 @@
         </p>
         <chrome-picker
           v-if="showPicker"
-          @input="updateColor($event.hex)"
+          @input="changeColor($event.hex)"
           :value="color"
           class="color-picker"
         />
@@ -34,26 +34,80 @@
         />
       </div>
       <template v-else>
-        <img :src="logo" alt="" class="m-b-5 max-h-100" />
+        <img :src="logo" alt class="m-b-5 max-h-100" />
         <div class="clearfix"></div>
         <button
           v-if="logo"
           type="button"
-          @click="changeLogo()"
+          @click="resetLogo"
           class="btn btn-default"
         >
           {{ l("QRCodeSettings.reset") }}
         </button>
       </template>
       <p class="text-left text-bold">
-        <strong>
-          {{ l("QRCodeSettings.pleaseScan") }}
-        </strong>
+        <strong>{{ l("QRCodeSettings.pleaseScan") }}</strong>
       </p>
-      <p class="text-left">
-        {{ l("QRCodeSettings.beware") }}
-      </p>
+      <p class="text-left">{{ l("QRCodeSettings.beware") }}</p>
       <p class="text-left">{{ l("QRCodeSettings.theColor") }}</p>
+    </PanelSetting>
+    <PanelSetting id="text" :title="l('QRCodeSettings.text')">
+      <div
+        v-for="(txt, index) in text"
+        :key="'text-' + index"
+        class="form-group"
+      >
+        <div class="input-group" style="width: 100%; display: flex">
+          <input
+            type="text"
+            class="form-control"
+            :value="txt.value"
+            @input="changeText(index, $event.target.value)"
+            style="width: calc(100% - 9rem)"
+          />
+          <input
+            type="number"
+            class="form-control"
+            :value="txt.size"
+            @input="changeTextSize(index, $event.target.value)"
+            style="width: 6.5rem"
+            min="8"
+            max="120"
+          />
+          <div
+            @click="toggleTextColorPicker(index)"
+            class="color-select shadow"
+            :style="'background-color: ' + txt.color"
+          ></div>
+        </div>
+        <div v-if="txt.showPicker" class="color-picker__wrapper">
+          <chrome-picker
+            @input="changeTextColor(index, $event.hex)"
+            :value="txt.color"
+            class="color-picker"
+          />
+          <div
+            class="color-picker__close"
+            @click.prevent="toggleTextColorPicker(index)"
+          >
+            <i class="fa fa-times"></i>
+          </div>
+        </div>
+        <button
+          class="btn btn-default"
+          type="button"
+          @click.prevent="removeText(index)"
+        >
+          {{ l("QRCodeSettings.removeText") }}
+        </button>
+      </div>
+      <button
+        class="btn btn-default ma-5"
+        type="button"
+        @click.prevent="addText"
+      >
+        {{ l("QRCodeSettings.addText") }}
+      </button>
     </PanelSetting>
     <PanelSetting id="frame" :title="l('QRCodeSettings.frame')">
       <div class="form-group input--fileupload" v-if="!frame">
@@ -66,9 +120,9 @@
         />
       </div>
       <template v-else>
-        <img :src="frame" alt="" class="m-b-5 max-h-100" />
+        <img :src="frame" alt class="m-b-5 max-h-100" />
         <div class="clearfix"></div>
-        <button type="button" @click="changeFrame()" class="btn btn-default">
+        <button type="button" @click="resetFrame" class="btn btn-default">
           {{ l("QRCodeSettings.reset") }}
         </button>
       </template>
@@ -80,9 +134,13 @@
 import Vue from "vue";
 import PanelSetting from "./PanelSetting";
 import { Chrome } from "vue-color";
+import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "QRCodeSettings",
+  props: {
+    value: Object
+  },
   components: {
     PanelSetting,
     "chrome-picker": Chrome
@@ -100,35 +158,8 @@ export default Vue.extend({
         "#c843ed",
         "#384af0"
       ],
-      color: "#000000",
-      showPicker: false,
-      logo: "",
-      frame: ""
+      showPicker: false
     };
-  },
-  /**
-   * Mounted then load the frame
-   * This is for quick development not in production
-   */
-  mounted() {
-    if (process.env.NODE_ENV === "production") {
-      return;
-    }
-
-    const xhr = new XMLHttpRequest();
-    xhr.onload = () => {
-      const event = {};
-      event.target = {};
-      event.target.files = [xhr.response];
-      this.imageToBase64(event, result => {
-        this.$emit("frame", result);
-      });
-    };
-    xhr.open("GET", "https://picsum.photos/600");
-    xhr.responseType = "blob";
-    setTimeout(() => {
-      xhr.send();
-    }, 1000);
   },
   methods: {
     imageToBase64(event, callback) {
@@ -147,163 +178,53 @@ export default Vue.extend({
       };
       fileReader.readAsDataURL(files[0]);
     },
-    changeInput(event, labelRef, emitter) {
-      if (event === undefined) {
-        this.$emit(emitter, "");
-        this[emitter] = "";
-        setTimeout(() => {
-          labelRef.innerText = this.l("QRCodeSettings.upload");
-        }, 100);
-        return;
-      }
-      if (event && event.target.files && event.target.files[0]) {
-        let name = event.target.files[0].name;
-        if (name.length > 20) {
-          const start = name.substring(0, 16);
-          const last = name.slice(name.length - 4, name.length);
-          name = start + "..." + last;
-        }
-        labelRef.innerText = name;
-        this.imageToBase64(event, result => {
-          this[emitter] = result;
-          this.$emit(emitter, result);
-        });
-      }
-    },
     changeLogo(event) {
-      if (event !== undefined && !event.target.value) {
-        return;
-      }
-      this.changeInput(event, this.$refs.logoLabel, "logo");
+      this.imageToBase64(event, result => {
+        this.$store.commit("SET_LOGO", result);
+      });
+    },
+    resetLogo() {
+      this.$store.commit("SET_LOGO", "");
     },
     changeFrame(event) {
-      if (event !== undefined && !event.target.value) {
-        return;
-      }
-      this.changeInput(event, this.$refs.frameLabel, "frame");
+      this.imageToBase64(event, result => {
+        this.$store.commit("SET_FRAME", result);
+      });
     },
-    updateColor(color) {
-      this.color = color;
-      this.$emit("color", this.color);
+    resetFrame() {
+      this.$store.commit("SET_FRAME", "");
+      this.$store.dispatch("resetDimension");
+    },
+    addText() {
+      this.$store.commit("ADD_TEXT");
+    },
+    removeText(index) {
+      this.$store.commit("REMOVE_TEXT", index);
+    },
+    toggleTextColorPicker(index) {
+      this.$store.commit("TOGGLE_TEXT_COLORPICKER", index);
+    },
+    changeTextColor(index, color) {
+      this.$store.commit("SET_TEXT_COLOR", { index, color });
+    },
+    changeText(index, value) {
+      this.$store.commit("SET_TEXT", { index, text: value });
+    },
+    changeTextSize(index, value) {
+      this.$store.commit("SET_TEXT_SIZE", { index, size: value });
+    },
+    changeColor(color) {
+      this.$store.commit("SET_COLOR", color);
+      this.$store.dispatch("updateSvg");
     }
+  },
+  computed: {
+    ...mapState({
+      color: state => state.color,
+      logo: state => state.logo,
+      frame: state => state.frame,
+      text: state => state.text
+    })
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.color-select {
-  display: inline-block;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin: 0.5rem;
-  transform: scale(1);
-  transition: 0.2s transform;
-  &:hover,
-  &.selected {
-    transform: scale(1.2);
-  }
-  &.selected {
-    border: solid 2px white;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16),
-      0 2px 10px 0 rgba(0, 0, 0, 0.12);
-  }
-}
-.customize-text {
-  margin-top: 2rem;
-  text-decoration: underline;
-  cursor: pointer;
-}
-.color-picker {
-  margin: auto;
-}
-input[type="file"] {
-  display: block !important;
-  right: 1px;
-  top: 1px;
-  height: 34px;
-  opacity: 0;
-  width: 100%;
-  background: none;
-  position: absolute;
-  overflow: hidden;
-  z-index: 2;
-}
-
-.input--fileupload {
-  display: block;
-  border: 1px solid #d6d7d6;
-  background: #fff;
-  border-radius: 4px;
-  width: 100%;
-  height: 36px;
-  line-height: 36px;
-  padding: 6px 10px 2px 10px;
-  overflow: hidden;
-  position: relative;
-
-  &:before,
-  input,
-  label {
-    cursor: pointer !important;
-  }
-  /* File upload button */
-  &:before {
-    /* inherit from boostrap btn styles */
-    padding: 4px 12px;
-    margin-bottom: 0;
-    font-size: 14px;
-    line-height: 20px;
-    color: #333333;
-    text-align: center;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-    vertical-align: middle;
-    cursor: pointer;
-    background-color: #f5f5f5;
-    background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
-    background-repeat: repeat-x;
-    border: 1px solid #cccccc;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    border-bottom-color: #b3b3b3;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: color 0.2s ease;
-
-    /* add more custom styles*/
-    content: "Browse";
-    display: block;
-    position: absolute;
-    z-index: 1;
-    top: 2px;
-    right: 2px;
-    line-height: 20px;
-    text-align: center;
-  }
-  &:hover,
-  &:focus {
-    &:before {
-      color: #333333;
-      background-color: #e6e6e6;
-      color: #333333;
-      text-decoration: none;
-      background-position: 0 -15px;
-      transition: background-position 0.2s ease-out;
-    }
-  }
-
-  label {
-    line-height: 24px;
-    color: #999999;
-    font-size: 14px;
-    font-weight: normal;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    position: relative;
-    z-index: 1;
-    margin-right: 90px;
-    margin-bottom: 0px;
-    cursor: text;
-  }
-}
-</style>

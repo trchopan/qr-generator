@@ -17,7 +17,7 @@
             type="button"
             class="close"
             data-dismiss="modal"
-            aria-label="Close"
+            :aria-label="l('EmbededModal.close')"
           >
             <span aria-hidden="true">&times;</span>
           </button>
@@ -34,7 +34,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
+            {{ l("EmbededModal.close") }}
           </button>
           <button type="button" class="btn btn-primary" @click="copyClipboard">
             {{ l("EmbededModal.copy") }}
@@ -52,15 +52,16 @@ export default Vue.extend({
   name: "EmbededModal",
   props: {
     url: String,
-    size: String
+    size: Number
   },
   computed: {
     embededLink() {
-      const _size = parseInt(this.size, 10);
-      const size = _size > 540 ? "540" : _size < 100 ? "100" : _size;
-      return `<img src='https://chart.googleapis.com/chart?cht=qr&chl=${
-        this.url
-      }&chs=${size}x${size}&choe=UTF-8&chld=L|2' alt=''>`;
+      const size = this.size > 540 ? 540 : this.size < 100 ? 100 : this.size;
+      return (
+        "<img src='https://chart.googleapis.com/chart?cht=qr&chl=" +
+        this.url +
+        `&chs=${size}x${size}&choe=UTF-8&chld=L|2' alt=''>`
+      );
     }
   },
   methods: {

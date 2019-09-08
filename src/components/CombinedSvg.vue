@@ -10,7 +10,7 @@
     style="enable-background:new 0 0 256 256;"
     xml:space="preserve"
   >
-    <g v-html="svg"></g>
+    <g v-html="svg" />
     <g v-if="logo">
       <rect
         x="50%"
@@ -19,7 +19,7 @@
         :height="logoSize"
         style="fill:#ffffff"
         :transform="translateRect"
-      ></rect>
+      />
       <image
         style="overflow:hidden;"
         x="50%"
@@ -28,7 +28,7 @@
         :height="logoSize - 5"
         :xlink:href="logo"
         :transform="translateLogo"
-      ></image>
+      />
     </g>
   </svg>
 </template>
@@ -39,9 +39,8 @@ import Vue from "vue";
 export default Vue.extend({
   name: "CombinedSvg",
   props: {
-    urlLength: Number,
     svg: String,
-    color: String,
+    urlLength: Number,
     logo: String
   },
   computed: {

@@ -8,7 +8,10 @@
     "reset": "Reset",
     "plaseScan": "Please scan the QR to check first",
     "beware": "Beware the contrast of QR color and the logo",
-    "theColor": "The color of the logo should be different from the QR code. Otherwise it will be difficult to be scanned."
+    "theColor": "The color of the logo should be different from the QR code. Otherwise it will be difficult to be scanned.",
+    "text": "Text",
+    "addText": "Add Text",
+    "removeText": "Remove"
   },
   "App": {
     "enterUrl": "Enter URL",
@@ -22,6 +25,7 @@
   "EmbededModal": {
     "embedQr": "Embed QR code on your website",
     "copy": "Copy to Clipboard",
-    "copied": "The embedded code is copied"
+    "copied": "The embedded code is copied",
+    "close": "Close"
   }
 }

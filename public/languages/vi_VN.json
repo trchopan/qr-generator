@@ -8,12 +8,17 @@
     "reset": "Đặt lại",
     "plaseScan": "Vui lòng quét QR để kiểm tra",
     "beware": "Xem kỹ sự tương phản của màu QR và logo",
-    "theColor": "Màu sắc của logo phải khác với mã QR nếu không sẽ rất khó để quét"
+    "theColor": "Màu sắc của logo phải khác với mã QR nếu không sẽ rất khó để quét",
+    "text": "Chữ",
+    "addText": "Thêm chữ",
+    "removeText": "Bỏ"
+
   },
   "App": {
     "enterUrl": "Nhập đường dẫn",
     "saveQR": "Lưu QR dạng SVG",
-    "saveWithFrame": "Lưu QR với Khung dạng PNG"
+    "saveWithFramePng": "Lưu QR với Khung dạng PNG",
+    "saveWithFrameJpg": "Lưu QR với Khung dạng JPG"
   },
   "URLForm": {
     "enterUrl": "Nhập đường dẫn"
@@ -21,6 +26,7 @@
   "EmbededModal": {
     "embedQr": "Nhúng mã QR trên trang web của bạn",
     "copy": "Sao chép vào clipboard",
-    "copied": "Mã nhúng đã được sao chép"
+    "copied": "Mã nhúng đã được sao chép",
+    "close": "Đóng"
   }
 }

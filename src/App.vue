@@ -1,54 +1,37 @@
 <template>
   <div id="app">
     <div class="container">
-      <div class="row">
-        <URLForm
-          :color="color"
-          @url="url = $event"
-          @svg="svg = $event"
-          class="no-print"
-        />
-      </div>
       <div class="row" key="qr-step">
-        <div v-if="url" class="col-md-8 p-relative">
-          <div>
-            <button
-              class="btn btn-default embeded-button"
-              type="button"
-              data-toggle="modal"
-              data-target="#exampleModal"
-            >
-              <i class="fa fa-code"></i>
-            </button>
-            <EmbededModal :url="url" :size="size" />
+        <div class="col-md-8">
+          <URLForm class="no-print" />
+          <div v-if="url" class="p-relative">
+            <div class="no-print">
+              <button
+                class="btn embeded-button"
+                type="button"
+                data-toggle="modal"
+                data-target="#exampleModal"
+              >
+                <i class="fa fa-code"></i>
+              </button>
+              <EmbededModal :url="url" :size="dimension.size" />
+            </div>
+            <div>
+              <DisplayQRSvg ref="displaySvg" />
+            </div>
           </div>
-          <div>
-            <DisplayQRSvg
-              ref="displaySvg"
-              :url="url"
-              :svg="svg"
-              :color="color"
-              :logo="logo"
-              :frame="frame"
-              @newSize="size = $event"
-            />
+          <div v-else class="col-md-8">
+            <p class="text-center ma-5"></p>
           </div>
-        </div>
-        <div v-else class="col-md-8">
-          <p class="text-center ma-5">{{ l("App.enterUrl") }}</p>
         </div>
         <div class="col-md-4">
-          <QRCodeSettings
-            @color="color = $event"
-            @logo="logo = $event"
-            @frame="frame = $event"
-          />
+          <QRCodeSettings />
           <div class="text-center">
             <button
               v-if="url && !frame"
-              class="btn btn-default mx-1"
+              class="btn btn-default ma-5"
               type="button"
-              @click.prevent="$refs.displaySvg.saveSvg()"
+              @click="$refs.displaySvg.saveSvg()"
             >
               {{ l("App.saveQR") }}
             </button>
@@ -56,14 +39,14 @@
               <button
                 class="btn btn-default ma-5"
                 type="button"
-                @click.prevent="$refs.displaySvg.saveCanvas('png')"
+                @click="$refs.displaySvg.saveCanvas('png')"
               >
                 {{ l("App.saveWithFramePng") }}
               </button>
               <button
                 class="btn btn-default ma-5"
                 type="button"
-                @click.prevent="$refs.displaySvg.saveCanvas('jpg')"
+                @click="$refs.displaySvg.saveCanvas('jpg')"
               >
                 {{ l("App.saveWithFrameJpg") }}
               </button>
@@ -76,10 +59,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";
 import DisplayQRSvg from "./components/DisplayQRSvg.vue";
 import EmbededModal from "./components/EmbededModal.vue";
+import { setTimeout } from "timers";
 
 export default {
   name: "app",
@@ -89,55 +74,37 @@ export default {
     DisplayQRSvg,
     EmbededModal
   },
-  data() {
-    return {
-      svg: "",
-      url: "",
-      color: "",
-      logo: "",
-      frame: "",
-      size: "256"
-    };
+  methods: {
+    setWidth() {
+      let pRelative = document.getElementsByClassName("p-relative")[0];
+      if (pRelative)
+        pRelative.style.width = pRelative.parentElement.offsetWidth - 30 + "px";
+    }
+  },
+  created() {
+    this.$store.dispatch("initialize");
+  },
+  mounted() {
+    this.setWidth();
+    let elem = this;
+    window.addEventListener("resize", function() {
+      elem.setWidth();
+    });
+  },
+  computed: {
+    ...mapState({
+      url: state => state.url,
+      dimension: state => state.dimension,
+      frame: state => state.frame
+    })
+  },
+  watch: {
+    url() {
+      let elem = this;
+      setTimeout(function() {
+        elem.setWidth();
+      }, 500);
+    }
   }
 };
 </script>
-
-<style lang="scss">
-@import "~normalize.css/normalize.css";
-@import "assets/css/app.scss";
-
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-@media print {
-  .no-print,
-  .no-print * {
-    display: none !important;
-  }
-}
-.ma-5 {
-  margin: 1.7rem;
-}
-.mx-1 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-.m-b-5 {
-  margin-bottom: 0.5rem;
-}
-.max-h-100 {
-  max-height: 100px;
-}
-.p-relative {
-  position: relative;
-}
-.embeded-button {
-  position: absolute;
-  z-index: 100;
-  opacity: 0.7;
-  right: 32px;
-  top: 16px;
-}
-</style>

@@ -39,9 +39,8 @@ import Vue from "vue";
 export default Vue.extend({
   name: "CombinedSvg",
   props: {
-    urlLength: Number,
     svg: String,
-    color: String,
+    urlLength: Number,
     logo: String
   },
   computed: {

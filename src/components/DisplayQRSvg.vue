@@ -15,9 +15,8 @@
       >
         <CombinedSvg
           ref="qrSvg"
-          :urlLength="url.length"
           :svg="svg"
-          :color="color"
+          :urlLength="urlLength"
           :logo="logo"
         />
       </VueDragResize>
@@ -25,10 +24,29 @@
         v-for="(txt, index) in text"
         :key="'text-dragable-' + index"
         parentLimitation
+        aspectRatio
+        :x="txt.top"
+        :y="txt.left"
+        :w="txt.size"
+        :h="txt.size"
+        :isResizable="false"
+        @dragging="changeTextPosition(index)"
       >
-        <div :style="{ color: txt.color, fontSize: '2rem' }">
-          {{ txt.value }}
-        </div>
+        <svg
+          x="0px"
+          y="0px"
+          :width="txt.value.length * txt.size * 0.62"
+          :height="txt.size * 1.5"
+        >
+          <text
+            :font-size="txt.size + 'px'"
+            :y="txt.size"
+            x="0"
+            :fill="txt.color"
+          >
+            {{ txt.value }}
+          </text>
+        </svg>
       </VueDragResize>
     </div>
     <canvas ref="canvasRef" v-show="false" />
@@ -38,36 +56,18 @@
 
 <script>
 import Vue from "vue";
+import { mapState, mapGetters } from "vuex";
 import CombinedSvg from "./CombinedSvg";
-
-const defaultDimension = {
-  size: 256,
-  top: 0,
-  left: 0
-};
 
 export default Vue.extend({
   name: "DisplayQRSvg",
   components: {
     CombinedSvg
   },
-  props: {
-    frame: String,
-    url: String,
-    svg: String,
-    color: String,
-    logo: String,
-    value: Object,
-    text: Array
-  },
   data() {
     return {
-      showSvg: true,
-      dimension: defaultDimension
+      showSvg: true
     };
-  },
-  created() {
-    this.dimension = this.value;
   },
   mounted() {
     this.$refs.frameRef.onload = () => {
@@ -75,9 +75,6 @@ export default Vue.extend({
     };
   },
   methods: {
-    reset() {
-      this.dimension = defaultDimension;
-    },
     doSave(item, name) {
       this.$refs.downloadLink.href = item;
       this.$refs.downloadLink.download = name;
@@ -95,12 +92,21 @@ export default Vue.extend({
       this.doSave(this.getSvgBlob(), "qr-code.svg");
     },
     resize(newRect) {
-      this.dimension = {
+      const dimension = {
         top: newRect.top,
         left: newRect.left,
         size: newRect.width
       };
-      this.$emit("input", this.dimension);
+      this.$store.commit("SET_DIMENSION", dimension);
+    },
+    changeTextPosition(index) {
+      return function(position) {
+        this.$store.commit("SET_TEXT_POSITION", {
+          index,
+          top: position.top,
+          left: position.left
+        });
+      };
     },
     saveCanvas(type) {
       const canvas = this.$refs.canvasRef;
@@ -123,14 +129,22 @@ export default Vue.extend({
       svg.src = this.getSvgBlob();
     }
   },
+  computed: {
+    ...mapState({
+      svg: state => state.svg,
+      logo: state => state.logo,
+      dimension: state => state.dimension,
+      frame: state => state.frame,
+      text: state => state.text
+    }),
+    ...mapGetters({ urlLength: "urlLength" })
+  },
   watch: {
-    frame(val) {
+    frame() {
       this.showSvg = false;
-      if (!val) {
-        setTimeout(() => {
-          this.showSvg = true;
-        }, 500);
-      }
+      setTimeout(() => {
+        this.showSvg = true;
+      }, 500);
     }
   }
 });

@@ -6,9 +6,9 @@
           <div
             v-for="_color in colorPresets"
             :key="'color-' + _color"
-            @click="updateColor(_color)"
+            @click="changeColor(_color)"
             class="color-select"
-            :class="{ selected: _color === settings.color }"
+            :class="{ selected: _color === color }"
             :style="'background-color: ' + _color"
           ></div>
         </div>
@@ -17,14 +17,14 @@
         </p>
         <chrome-picker
           v-if="showPicker"
-          @input="updateColor($event.hex)"
-          :value="settings.color"
+          @input="changeColor($event.hex)"
+          :value="color"
           class="color-picker"
         />
       </div>
     </PanelSetting>
     <PanelSetting id="logo" :title="l('QRCodeSettings.logo')">
-      <div class="form-group input--fileupload" v-if="!settings.logo">
+      <div class="form-group input--fileupload" v-if="!logo">
         <label ref="logoLabel">{{ l("QRCodeSettings.upload") }}</label>
         <input
           type="file"
@@ -34,12 +34,12 @@
         />
       </div>
       <template v-else>
-        <img :src="settings.logo" alt class="m-b-5 max-h-100" />
+        <img :src="logo" alt class="m-b-5 max-h-100" />
         <div class="clearfix"></div>
         <button
-          v-if="settings.logo"
+          v-if="logo"
           type="button"
-          @click="changeLogo()"
+          @click="resetLogo"
           class="btn btn-default"
         >
           {{ l("QRCodeSettings.reset") }}
@@ -61,21 +61,45 @@
           <input
             type="text"
             class="form-control"
-            v-model="txt.value"
-            style="width: calc(100% - 2.5rem)"
+            :value="txt.value"
+            @input="changeText(index, $event.target.value)"
+            style="width: calc(100% - 9rem)"
+          />
+          <input
+            type="number"
+            class="form-control"
+            :value="txt.size"
+            @input="changeTextSize(index, $event.target.value)"
+            style="width: 6.5rem"
+            min="8"
+            max="120"
           />
           <div
-            @click="txt.showPicker = !txt.showPicker"
-            class="color-select"
+            @click="toggleTextColorPicker(index)"
+            class="color-select shadow"
             :style="'background-color: ' + txt.color"
           ></div>
         </div>
-        <chrome-picker
-          v-if="txt.showPicker"
-          @input="changeTextColor(index, $event.hex)"
-          :value="txt.color"
-          class="color-picker"
-        />
+        <div v-if="txt.showPicker" class="color-picker__wrapper">
+          <chrome-picker
+            @input="changeTextColor(index, $event.hex)"
+            :value="txt.color"
+            class="color-picker"
+          />
+          <div
+            class="color-picker__close"
+            @click.prevent="toggleTextColorPicker(index)"
+          >
+            <i class="fa fa-times"></i>
+          </div>
+        </div>
+        <button
+          class="btn btn-default"
+          type="button"
+          @click.prevent="removeText(index)"
+        >
+          {{ l("QRCodeSettings.removeText") }}
+        </button>
       </div>
       <button
         class="btn btn-default ma-5"
@@ -86,7 +110,7 @@
       </button>
     </PanelSetting>
     <PanelSetting id="frame" :title="l('QRCodeSettings.frame')">
-      <div class="form-group input--fileupload" v-if="!settings.frame">
+      <div class="form-group input--fileupload" v-if="!frame">
         <label ref="frameLabel">{{ l("QRCodeSettings.upload") }}</label>
         <input
           type="file"
@@ -96,9 +120,9 @@
         />
       </div>
       <template v-else>
-        <img :src="settings.frame" alt class="m-b-5 max-h-100" />
+        <img :src="frame" alt class="m-b-5 max-h-100" />
         <div class="clearfix"></div>
-        <button type="button" @click="changeFrame()" class="btn btn-default">
+        <button type="button" @click="resetFrame" class="btn btn-default">
           {{ l("QRCodeSettings.reset") }}
         </button>
       </template>
@@ -110,6 +134,7 @@
 import Vue from "vue";
 import PanelSetting from "./PanelSetting";
 import { Chrome } from "vue-color";
+import { mapState } from "vuex";
 
 export default Vue.extend({
   name: "QRCodeSettings",
@@ -133,17 +158,8 @@ export default Vue.extend({
         "#c843ed",
         "#384af0"
       ],
-      showPicker: false,
-      settings: {
-        color: "#000000",
-        logo: "",
-        frame: ""
-      },
-      text: []
+      showPicker: false
     };
-  },
-  created() {
-    this.settings = this.value;
   },
   methods: {
     imageToBase64(event, callback) {
@@ -162,58 +178,53 @@ export default Vue.extend({
       };
       fileReader.readAsDataURL(files[0]);
     },
-    changeInput(event, labelRef, emitter) {
-      if (event === undefined) {
-        this.settings[emitter] = "";
-        this.$emit("input", this.settings);
-        setTimeout(() => {
-          this.$emit("reset", true);
-          if (labelRef) labelRef.innerText = this.l("QRCodeSettings.upload");
-        }, 100);
-        return;
-      }
-      if (event && event.target.files && event.target.files[0]) {
-        let name = event.target.files[0].name;
-        if (name.length > 20) {
-          const start = name.substring(0, 16);
-          const last = name.slice(name.length - 4, name.length);
-          name = start + "..." + last;
-        }
-        if (labelRef) labelRef.innerText = name;
-        this.imageToBase64(event, result => {
-          this.settings[emitter] = result;
-          this.$emit("input", this.settings);
-        });
-      }
-    },
     changeLogo(event) {
-      if (event !== undefined && !event.target.value) {
-        return;
-      }
-      this.changeInput(event, this.$refs.logoLabel, "logo");
+      this.imageToBase64(event, result => {
+        this.$store.commit("SET_LOGO", result);
+      });
+    },
+    resetLogo() {
+      this.$store.commit("SET_LOGO", "");
     },
     changeFrame(event) {
-      if (event !== undefined && !event.target.value) {
-        return;
-      }
-      this.changeInput(event, this.$refs.frameLabel, "frame");
+      this.imageToBase64(event, result => {
+        this.$store.commit("SET_FRAME", result);
+      });
     },
-    changeTextColor(index, color) {
-      this.text[index].color = color;
-      // this.text[index].showPicker = false;
+    resetFrame() {
+      this.$store.commit("SET_FRAME", "");
+      this.$store.dispatch("resetDimension");
     },
     addText() {
-      this.text.push({ value: "", color: "#000000", showPicker: false });
+      this.$store.commit("ADD_TEXT");
     },
-    updateColor(color) {
-      this.settings.color = color;
-      this.$emit("input", this.settings);
+    removeText(index) {
+      this.$store.commit("REMOVE_TEXT", index);
+    },
+    toggleTextColorPicker(index) {
+      this.$store.commit("TOGGLE_TEXT_COLORPICKER", index);
+    },
+    changeTextColor(index, color) {
+      this.$store.commit("SET_TEXT_COLOR", { index, color });
+    },
+    changeText(index, value) {
+      this.$store.commit("SET_TEXT", { index, text: value });
+    },
+    changeTextSize(index, value) {
+      this.$store.commit("SET_TEXT_SIZE", { index, size: value });
+    },
+    changeColor(color) {
+      this.$store.commit("SET_COLOR", color);
+      this.$store.dispatch("updateSvg");
     }
   },
-  watch: {
-    text() {
-      this.$emit("text", this.text);
-    }
+  computed: {
+    ...mapState({
+      color: state => state.color,
+      logo: state => state.logo,
+      frame: state => state.frame,
+      text: state => state.text
+    })
   }
 });
 </script>

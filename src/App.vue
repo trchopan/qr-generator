@@ -3,12 +3,7 @@
     <div class="container">
       <div class="row" key="qr-step">
         <div class="col-md-8">
-          <URLForm
-            v-model="url"
-            :color="settings.color"
-            @svg="svg = $event"
-            class="no-print"
-          />
+          <URLForm class="no-print" />
           <div v-if="url" class="p-relative">
             <div class="no-print">
               <button
@@ -22,17 +17,7 @@
               <EmbededModal :url="url" :size="dimension.size" />
             </div>
             <div>
-              <DisplayQRSvg
-                ref="displaySvg"
-                v-model="dimension"
-                :url="url"
-                :svg="svg"
-                :settings="settings"
-                :color="settings.color"
-                :logo="settings.logo"
-                :text="text"
-                :frame="settings.frame"
-              />
+              <DisplayQRSvg ref="displaySvg" />
             </div>
           </div>
           <div v-else class="col-md-8">
@@ -40,32 +25,28 @@
           </div>
         </div>
         <div class="col-md-4">
-          <QRCodeSettings
-            v-model="settings"
-            @reset="$refs.displaySvg.reset()"
-            @text="text = $event"
-          />
+          <QRCodeSettings />
           <div class="text-center">
             <button
-              v-if="url && !settings.frame"
+              v-if="url && !frame"
               class="btn btn-default ma-5"
               type="button"
-              @click.prevent="$refs.displaySvg.saveSvg()"
+              @click="$refs.displaySvg.saveSvg()"
             >
               {{ l("App.saveQR") }}
             </button>
-            <template v-if="url && settings.frame">
+            <template v-if="url && frame">
               <button
                 class="btn btn-default ma-5"
                 type="button"
-                @click.prevent="$refs.displaySvg.saveCanvas('png')"
+                @click="$refs.displaySvg.saveCanvas('png')"
               >
                 {{ l("App.saveWithFramePng") }}
               </button>
               <button
                 class="btn btn-default ma-5"
                 type="button"
-                @click.prevent="$refs.displaySvg.saveCanvas('jpg')"
+                @click="$refs.displaySvg.saveCanvas('jpg')"
               >
                 {{ l("App.saveWithFrameJpg") }}
               </button>
@@ -78,6 +59,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import URLForm from "./components/URLForm.vue";
 import QRCodeSettings from "./components/QRCodeSettings.vue";
 import DisplayQRSvg from "./components/DisplayQRSvg.vue";
@@ -92,34 +74,7 @@ export default {
     DisplayQRSvg,
     EmbededModal
   },
-  data() {
-    return {
-      svg: "",
-      url: "",
-      settings: {
-        color: "#000000",
-        logo: "",
-        frame: ""
-      },
-      dimension: {
-        size: 256,
-        top: 0,
-        left: 0
-      },
-      text: []
-    };
-  },
   methods: {
-    getQueryParams(qs) {
-      qs = qs.split("+").join(" ");
-      const re = /[?&]?([^=]+)=([^&]*)/g;
-      const params = {};
-      let tokens;
-      while ((tokens = re.exec(qs))) {
-        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
-      }
-      return params;
-    },
     setWidth() {
       let pRelative = document.getElementsByClassName("p-relative")[0];
       if (pRelative)
@@ -127,26 +82,7 @@ export default {
     }
   },
   created() {
-    const query =
-      this.getQueryParams(document.location.search) || window.QRCodeSettings;
-    this.url = query ? query.url : this.url;
-    ["color", "logo", "frame"].forEach(attr => {
-      this.settings[attr] =
-        query && query[attr] ? query[attr] : this.settings[attr];
-    });
-    try {
-      ["size", "top", "left"].forEach(attr => {
-        this.dimension[attr] =
-          query && query[attr] ? parseInt(query[attr]) : this.dimension[attr];
-      });
-    } catch (error) {
-      console.error("Error changing dimention", error);
-    }
-    if (query.print) {
-      setTimeout(function() {
-        window.print();
-      }, 1000);
-    }
+    this.$store.dispatch("initialize");
   },
   mounted() {
     this.setWidth();
@@ -154,6 +90,13 @@ export default {
     window.addEventListener("resize", function() {
       elem.setWidth();
     });
+  },
+  computed: {
+    ...mapState({
+      url: state => state.url,
+      dimension: state => state.dimension,
+      frame: state => state.frame
+    })
   },
   watch: {
     url() {

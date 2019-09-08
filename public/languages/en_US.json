@@ -10,7 +10,8 @@
     "beware": "Beware the contrast of QR color and the logo",
     "theColor": "The color of the logo should be different from the QR code. Otherwise it will be difficult to be scanned.",
     "text": "Text",
-    "addText": "Add Text"
+    "addText": "Add Text",
+    "removeText": "Remove"
   },
   "App": {
     "enterUrl": "Enter URL",

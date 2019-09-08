@@ -60,6 +60,10 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16),
       0 2px 10px 0 rgba(0, 0, 0, 0.12);
   }
+  &.shadow{
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16),
+      0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  }
 }
 .customize-text {
   margin-top: 2rem;
@@ -68,6 +72,18 @@
 }
 .color-picker {
   margin: auto;
+}
+.color-picker__wrapper {
+  position: relative;
+  padding: 2rem 0;
+  .color-picker__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border-radius: 50%;
+  }
 }
 input[type="file"] {
   display: block !important;

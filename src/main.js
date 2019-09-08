@@ -3,6 +3,7 @@ import App from "./App.vue";
 import VueDragResize from "vue-drag-resize";
 import "@/assets/css/app.scss";
 import "@/assets/css/qr-generator.print.scss";
+import store from './store'
 
 Vue.config.productionTip = false;
 Vue.component("VueDragResize", VueDragResize);
@@ -26,6 +27,7 @@ const xhr = new XMLHttpRequest();
 xhr.onload = () => {
   window.label = JSON.parse(xhr.response);
   new Vue({
+    store,
     render: h => h(App)
   }).$mount("#app");
 };

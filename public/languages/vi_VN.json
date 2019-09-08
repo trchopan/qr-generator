@@ -10,7 +10,9 @@
     "beware": "Xem kỹ sự tương phản của màu QR và logo",
     "theColor": "Màu sắc của logo phải khác với mã QR nếu không sẽ rất khó để quét",
     "text": "Chữ",
-    "addText": "Thêm chữ"
+    "addText": "Thêm chữ",
+    "removeText": "Bỏ"
+
   },
   "App": {
     "enterUrl": "Nhập đường dẫn",

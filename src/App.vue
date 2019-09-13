@@ -35,7 +35,7 @@
             >
               {{ l("App.saveQR") }}
             </button>
-            <template v-if="localLogoFrame">
+            <template v-if="shouldDownloadImage">
               <button
                 class="btn btn-default ma-5"
                 type="button"
@@ -51,7 +51,7 @@
                 {{ l("App.saveWithFrameJpg") }}
               </button>
             </template>
-            <div v-if="externalLogoFrame" class="text-left text-grey">
+            <div v-if="externalLinks" class="text-left text-grey">
               <p>{{ l("App.becauseSecurity") }}</p>
               <p>{{ l("App.pleaseReset") }}</p>
               <button class="btn btn-default ma-5" @click="onPrint">
@@ -111,15 +111,12 @@ export default {
       logo: state => state.logo,
       frame: state => state.frame
     }),
-    localLogoFrame() {
-      return (
-        this.logo &&
-        this.frame &&
-        !this.isHttp(this.logo) &&
-        !this.isHttp(this.frame)
-      );
+    shouldDownloadImage() {
+      const hasLogo = this.logo && !this.isHttp(this.logo);
+      const hasFrame = this.frame && !this.isHttp(this.frame);
+      return (hasLogo && hasFrame) || hasFrame;
     },
-    externalLogoFrame() {
+    externalLinks() {
       return this.isHttp(this.logo) || this.isHttp(this.frame);
     }
   },

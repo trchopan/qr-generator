@@ -5,7 +5,7 @@
         <div class="col-md-8">
           <URLForm class="no-print" />
           <div v-if="url" class="p-relative">
-            <div class="no-print">
+            <div v-if="!logo && !frame" class="no-print">
               <button
                 class="btn embeded-button"
                 type="button"

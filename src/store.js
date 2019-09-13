@@ -4,6 +4,10 @@ import QRCode from "qrcode";
 
 Vue.use(Vuex);
 
+const mutationSetter = key => (state, value) => {
+  state[key] = value;
+};
+
 const defaultDimension = () => ({
   size: 256,
   top: 0,
@@ -95,24 +99,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SET_URL(state, url) {
-      state.url = url;
-    },
-    SET_COLOR(state, color) {
-      state.color = color;
-    },
-    SET_LOGO(state, logo) {
-      state.logo = logo;
-    },
-    SET_DIMENSION(state, dimension) {
-      state.dimension = dimension;
-    },
-    SET_FRAME(state, frame) {
-      state.frame = frame;
-    },
-    SET_SVG(state, svg) {
-      state.svg = svg;
-    },
+    SET_URL: mutationSetter("url"),
+    SET_COLOR: mutationSetter("color"),
+    SET_LOGO: mutationSetter("logo"),
+    SET_DIMENSION: mutationSetter("dimension"),
+    SET_FRAME: mutationSetter("frame"),
+    SET_SVG: mutationSetter("svg"),
     ADD_TEXT(state) {
       state.text.push(defaultText());
     },

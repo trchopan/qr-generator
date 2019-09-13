@@ -35,7 +35,7 @@
             >
               {{ l("App.saveQR") }}
             </button>
-            <template v-if="url && frame">
+            <template v-if="localLogoFrame">
               <button
                 class="btn btn-default ma-5"
                 type="button"
@@ -51,6 +51,13 @@
                 {{ l("App.saveWithFrameJpg") }}
               </button>
             </template>
+            <div v-if="externalLogoFrame" class="text-left text-grey">
+              <p>{{ l("App.becauseSecurity") }}</p>
+              <p>{{ l("App.pleaseReset") }}</p>
+              <button class="btn btn-default ma-5" @click="onPrint">
+                {{ l("App.print") }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -79,6 +86,12 @@ export default {
       let pRelative = document.getElementsByClassName("p-relative")[0];
       if (pRelative)
         pRelative.style.width = pRelative.parentElement.offsetWidth - 30 + "px";
+    },
+    isHttp(str) {
+      return !!str.match(/^http(s).*/);
+    },
+    onPrint() {
+      print();
     }
   },
   created() {
@@ -95,8 +108,20 @@ export default {
     ...mapState({
       url: state => state.url,
       dimension: state => state.dimension,
+      logo: state => state.logo,
       frame: state => state.frame
-    })
+    }),
+    localLogoFrame() {
+      return (
+        this.logo &&
+        this.frame &&
+        !this.isHttp(this.logo) &&
+        !this.isHttp(this.frame)
+      );
+    },
+    externalLogoFrame() {
+      return this.isHttp(this.logo) || this.isHttp(this.frame);
+    }
   },
   watch: {
     url() {

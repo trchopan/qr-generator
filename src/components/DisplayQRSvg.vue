@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="frameContainer" class="frame--container">
+    <div ref="container" class="frame--container">
       <img ref="frameRef" :src="frame" alt />
       <VueDragResize
         v-if="showSvg"
@@ -110,16 +110,16 @@ export default Vue.extend({
     },
     saveCanvas(type) {
       const canvas = this.$refs.canvasRef;
-      const frame = this.$refs.frameRef;
-      const frameW = this.$refs.frameContainer.offsetWidth;
-      const frameH = this.$refs.frameContainer.offsetHeight;
+      const image = this.$refs.frameRef;
+      const imageW = image.offsetWidth;
+      const imageH = image.offsetHeight;
+      const containerW = this.$refs.container.offsetWidth;
+      const containerH = this.$refs.container.offsetHeight;
       const svg = new Image();
-      svg.crossOrigin = "anonymous";
-      frame.crossOrigin = "anonymous";
-      canvas.width = frameW;
-      canvas.height = frameH;
+      canvas.width = containerW;
+      canvas.height = containerH;
       const ctx = canvas.getContext("2d");
-      ctx.drawImage(frame, 0, 0, frameW, frameH);
+      ctx.drawImage(image, 0, 0, imageW, imageH);
       svg.onload = () => {
         const { size, left, top } = this.dimension;
         ctx.drawImage(svg, left, top, size, size);
@@ -140,7 +140,9 @@ export default Vue.extend({
     ...mapGetters({ urlLength: "urlLength" })
   },
   watch: {
-    frame() {
+    frame(val) {
+      this.$refs.container.style.minHeight =
+        val && val.length > 0 ? "auto" : "540px";
       this.showSvg = false;
       setTimeout(() => {
         this.showSvg = true;

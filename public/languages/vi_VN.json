@@ -12,13 +12,15 @@
     "text": "Chữ",
     "addText": "Thêm chữ",
     "removeText": "Bỏ"
-
   },
   "App": {
     "enterUrl": "Nhập đường dẫn",
     "saveQR": "Lưu QR dạng SVG",
     "saveWithFramePng": "Lưu QR với Khung dạng PNG",
-    "saveWithFrameJpg": "Lưu QR với Khung dạng JPG"
+    "saveWithFrameJpg": "Lưu QR với Khung dạng JPG",
+    "becauseSecurity": "Vì lý do bảo mật và pháp lý, chúng tôi không thể tạo hình ảnh để tải xuống từ các liên kết bên ngoài. Vui lòng sử dụng hình ảnh của bạn hoặc tải hình ảnh bạn cần về máy tính của bạn trước.",
+    "pleaseReset": "Vui lòng đặt lại ở trên. Hoặc nhấn bên dưới để in.",
+    "print": "In"
   },
   "URLForm": {
     "enterUrl": "Nhập đường dẫn"

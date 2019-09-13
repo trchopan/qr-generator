@@ -17,7 +17,10 @@
     "enterUrl": "Enter URL",
     "saveQR": "Save QR as SVG",
     "saveWithFramePng": "Save QR with Frame as PNG",
-    "saveWithFrameJpg": "Save QR with Frame as JPG"
+    "saveWithFrameJpg": "Save QR with Frame as JPG",
+    "becauseSecurity": "Because of security and legal reason, we cannot create downloadable image from external links. Please use your own image or download the image you need to your computer first.",
+    "pleaseReset": "Please reset it in the settings above. Or click below to print it.",
+    "print": "Print"
   },
   "URLForm": {
     "enterUrl": "Enter URL"
